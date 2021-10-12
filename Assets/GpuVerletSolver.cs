@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class GpuVerletSolver : MonoBehaviour {
+public class GpuVerletSolver : VerletSolver {
     public struct Point {
         public Vector2 Position, PrevPosition;
         public int Locked;
@@ -28,21 +28,13 @@ public class GpuVerletSolver : MonoBehaviour {
     [SerializeField]
     private ComputeShader _verletShader;
     [SerializeField]
-    private int _updatesPerSec;
-    private float _updateDelta;
-    private float _nextUpdateTime;
+    private int contraintReps;
 
     private int selected = -1;
 
     private static readonly Vector2 GRAVITY = new Vector2(0, -9.81f);
     private List<Point> _points = new List<Point>();
     private List<Stick> _sticks = new List<Stick>();
-
-    private void Awake() {
-        _updateDelta = 1f / _updatesPerSec;
-        Debug.Log(_updateDelta);
-        _nextUpdateTime = Time.time;
-    }
 
     public void Solve() {
         // ######################## gravity ############################
@@ -68,9 +60,7 @@ public class GpuVerletSolver : MonoBehaviour {
         sticksBuffer.SetData(_sticks);
         _verletShader.SetBuffer(constraintsKernel, "Sticks", sticksBuffer);
 
-        _nextUpdateTime = Time.time + _updateDelta;
-        while (Time.time < _nextUpdateTime) {
-            Debug.Log("Here");
+        for (int i = 0; i < contraintReps; i++) {
             _verletShader.Dispatch(constraintsKernel, _points.Count, 1, 1);
         }
 
@@ -86,31 +76,34 @@ public class GpuVerletSolver : MonoBehaviour {
             sticksBuffer.Release();
             _sticks = output.ToList();
         }
-
     }
 
     void Update() {
-        if (Input.GetMouseButtonDown(0)) {
-            _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
-            uint newPoint = (uint)_points.Count - 1;
-            if (selected != -1) {
-                _sticks.Add(new Stick((uint)selected, newPoint, Vector2.Distance(_points[selected].Position, _points[(int)newPoint].Position)));
-            }
-            selected = (int)newPoint;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
             Solve();
     }
 
+    public override void SetLocked(bool locked) {
+        _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
+        uint newPoint = (uint)_points.Count - 1;
+        if (selected != -1) {
+            _sticks.Add(new Stick((uint)selected, newPoint, Vector2.Distance(_points[selected].Position, _points[(int)newPoint].Position)));
+        }
+        selected = (int)newPoint;
+    }
+
+    public override void SetNodeLocked(bool locked) {
+        var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
+        _points[closestPoint.Item3] = new Point(closestPoint.Item1.Position, locked ? 1 : 0);
+    }
+
     private void OnDrawGizmos() {
+        Gizmos.color = Color.magenta;
         foreach (var p in _points) {
-            Gizmos.color = p.Locked == 1 ? Color.red : Color.blue;
-            Gizmos.DrawSphere(p.Position, 0.1f);
+            Gizmos.DrawSphere(p.Position, p.Locked == 1 ? 0.2f : 0.1f);
         }
 
         foreach (var s in _sticks) {
-            Gizmos.color = Color.blue;
             Gizmos.DrawLine(_points[(int)s.A].Position, _points[(int)s.B].Position);
         }
     }
