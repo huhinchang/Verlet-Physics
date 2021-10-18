@@ -26,9 +26,11 @@ public class CpuVerletSolver : VerletSolver {
 
     [SerializeField]
     Point _selectedNode = null;
-    static readonly Vector2 GRAVITY = new Vector2(0, -9.81f);
-    List<Point> _points = new List<Point>();
-    List<Stick> _sticks = new List<Stick>();
+
+    private static readonly Vector2 GRAVITY = new Vector2(0, -9.81f);
+    private List<Point> _points = new List<Point>();
+    private List<Stick> _sticks = new List<Stick>();
+    private Vector2 _knifeStart, _knifeEnd;
 
     public void Solve() {
         const int STICK_ITERATIONS = 5;
@@ -73,7 +75,7 @@ public class CpuVerletSolver : VerletSolver {
             Solve();
     }
 
-    public override void SetLocked(bool locked) {
+    public override void PlaceNode(bool locked) {
         var newPoint = new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), locked);
         _points.Add(newPoint);
         if (_selectedNode != null) {
@@ -87,6 +89,11 @@ public class CpuVerletSolver : VerletSolver {
         closestPoint.Item1.Locked = locked;
     }
 
+    public override void SetKnife(Vector2 p1, Vector2 p2) {
+        _knifeStart = p1;
+        _knifeEnd = p2;
+    }
+
     private void OnDrawGizmos() {
         Gizmos.color = Color.cyan;
         foreach (var p in _points) {
@@ -94,6 +101,17 @@ public class CpuVerletSolver : VerletSolver {
         }
 
         foreach (var s in _sticks) {
+            bool indicateCut = Utils.Intersects(_knifeStart, _knifeEnd, s.A.Position, s.B.Position);
+            Debug.Log(indicateCut);
+            Gizmos.color = indicateCut ? Color.red : Color.cyan;
+
+            /*
+            Vector2? cutLocation = Utils.GetIntersection(_knifeStart, _knifeEnd, s.A.Position, s.B.Position);
+            if (cutLocation != null) {
+                Gizmos.DrawSphere((Vector2) cutLocation, 0.1f);
+                Debug.Log(cutLocation);
+            }
+            */
             Gizmos.DrawLine(s.A.Position, s.B.Position);
         }
     }

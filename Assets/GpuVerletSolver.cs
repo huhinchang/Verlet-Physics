@@ -35,6 +35,7 @@ public class GpuVerletSolver : VerletSolver {
     private static readonly Vector2 GRAVITY = new Vector2(0, -9.81f);
     private List<Point> _points = new List<Point>();
     private List<Stick> _sticks = new List<Stick>();
+    private Vector2 _knifeStart, _knifeEnd;
 
     public void Solve() {
         // ######################## gravity ############################
@@ -83,7 +84,7 @@ public class GpuVerletSolver : VerletSolver {
             Solve();
     }
 
-    public override void SetLocked(bool locked) {
+    public override void PlaceNode(bool locked) {
         _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
         uint newPoint = (uint)_points.Count - 1;
         if (selected != -1) {
@@ -95,6 +96,11 @@ public class GpuVerletSolver : VerletSolver {
     public override void SetNodeLocked(bool locked) {
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
         _points[closestPoint.Item3] = new Point(closestPoint.Item1.Position, locked ? 1 : 0);
+    }
+
+    public override void SetKnife(Vector2 p1, Vector2 p2) {
+        _knifeStart = p1;
+        _knifeEnd = p2;
     }
 
     private void OnDrawGizmos() {

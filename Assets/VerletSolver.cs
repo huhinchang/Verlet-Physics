@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class VerletSolver : MonoBehaviour {
-    public abstract void SetLocked(bool locked);
+    public abstract void PlaceNode(bool locked);
     public abstract void SetNodeLocked(bool locked);
+    public abstract void SetKnife(Vector2 p1, Vector2 p2);
 
-    private static Vector2 GetMousePosition() {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
     protected static (T, float, int) GetPointClosestToMouse<T>(List<T> points, Func<T, Vector2> getPos) {
-        var mousePos = GetMousePosition();
+        var mousePos = Utils.GetMousePosition();
 
         T closest = points[0];
         float closestDist = float.MaxValue;
