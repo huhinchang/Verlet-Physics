@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class KnifeTool : Tool
 {
@@ -8,17 +9,27 @@ public class KnifeTool : Tool
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) {
-            _start = Utils.GetMousePosition();
-            _cpu.SetKnife(_start, _end);
+        if (Input.GetMouseButtonDown(0))
+        {
+            _start = Utils.Generic.GetMousePosition();
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                _solvers.ForEach(v => v.SetKnife(_start, _end));
+            }
         }
-        if (Input.GetMouseButton(0)) {
-            _end = Utils.GetMousePosition();
-            _cpu.SetKnife(_start, _end);
+        if (Input.GetMouseButton(0))
+        {
+            _end = Utils.Generic.GetMousePosition();
+            _solvers.ForEach(v => v.SetKnife(_start, _end));
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            _solvers.ForEach(v => v.Cut());
         }
     }
 
-    private void OnDrawGizmos() {
+    private void OnDrawGizmos()
+    {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(_start, _end);
     }

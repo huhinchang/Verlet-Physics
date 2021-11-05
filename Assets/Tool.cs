@@ -4,11 +4,10 @@ using UnityEngine;
 
 public abstract class Tool : MonoBehaviour
 {
-    protected CpuVerletSolver _cpu = default;
-    protected GpuVerletSolver _gpu = default;
+    protected List<VerletSolver> _solvers;
 
-    public void Setup(CpuVerletSolver cpu, GpuVerletSolver gpu) {
-        _cpu = cpu;
-        _gpu = gpu;
+    public void Setup(List<VerletSolver> solvers)
+    {
+        _solvers = solvers;
     }
 }
