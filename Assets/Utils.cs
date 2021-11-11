@@ -12,12 +12,6 @@ namespace Utils
             return Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        // checks if f is withing a and b (inclusive, order of a and b doesn't matter)
-        public static bool IsWithinInclusive(this float f, float a, float b)
-        {
-            return (f >= Mathf.Min(a, b) && f <= Mathf.Max(a, b));
-        }
-
         // C style int to bool
         public static bool IsTrue(this int i)
         {
@@ -33,47 +27,69 @@ namespace Utils
 
     public static class Math
     {
-        // p1 p2 are for line 1, p3 p4 are for line 2
-        public static bool Intersects(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+        public enum Orientation { CW, CCW, Colinear }
+
+        // checks if f is within a and b (inclusive, order of a and b doesn't matter)
+        public static bool IsWithinInclusive(this float f, float a, float b)
         {
-            Vector2? intersection = GetIntersection(p1, p2, p3, p4);
-            return (intersection?.x.IsWithinInclusive(p1.x, p2.x) ?? false) &&
-            (intersection?.y.IsWithinInclusive(p1.y, p2.y) ?? false) &&
-            (intersection?.x.IsWithinInclusive(p3.x, p4.x) ?? false) &&
-            (intersection?.y.IsWithinInclusive(p3.y, p4.y) ?? false);
+            return f >= Mathf.Min(a, b) && f <= Mathf.Max(a, b);
         }
 
-        // p1 p2 are for line 1, p3 p4 are for line 2
-        public static Vector2? GetIntersection(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+        // checks if p is within the bounding box of a and b (inclusive, order of a and b doesn't matter)
+        public static bool IsWithinBoundingBox(this Vector2 p, Vector2 a, Vector2 b)
         {
-            float m1 = FindSlope(p1, p2);
-            float b1 = FindYIntercept(p1, m1);
+            return p.x.IsWithinInclusive(a.x, b.x) && p.y.IsWithinInclusive(a.y, b.y);
+        }
 
-            float m2 = FindSlope(p3, p4);
-            float b2 = FindYIntercept(p3, m2);
+        // determines if point p is on line segment p1 p2
+        public static bool IsOnSegment(this Vector2 p, Vector2 a, Vector2 b)
+        {
+            return GetOrientation(p, a, b) == Orientation.Colinear && p.IsWithinBoundingBox(a, b);
+        }
 
-            if (m1 == m2)
+        // determines if p1, p2, and p3 are clockwise
+        // p1 p2 are for line 1, p3 p4 are for line 2
+        // implementation from https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect
+        public static Orientation GetOrientation(Vector2 p1, Vector2 p2, Vector2 p3)
+        {
+            float orientation = (p3.y - p1.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p3.x - p1.x);
+            if (orientation < 0)
             {
-                return null;
+                return Orientation.CCW;
+            } else if (orientation > 0)
+            {
+                return Orientation.CW;
             } else
             {
-                float x = (b2 - b1) / (m1 - m2);
-                float y = (m1 * x) + b1;
-                return new Vector2(x, y);
+                return Orientation.Colinear;
             }
         }
 
-        private static float FindSlope(Vector2 p1, Vector2 p2)
+        // determines if two lines intersect
+        // p1 p2 are for line 1, p3 p4 are for line 2
+        // implementation from https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect
+        public static bool Intersects(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
         {
-            return (p2.y - p1.y) / (p2.x - p1.x); // rise over run
+            Orientation o123 = GetOrientation(p1, p2, p3);
+            Orientation o124 = GetOrientation(p1, p2, p4);
+            Orientation o341 = GetOrientation(p3, p4, p1);
+            Orientation o342 = GetOrientation(p3, p4, p2);
+
+            if (o123 == Orientation.Colinear && o124 == Orientation.Colinear) // line segments are colinear
+            {
+                return p1.IsWithinBoundingBox(p3, p4) || p2.IsWithinBoundingBox(p3, p4); // they can be colinear but disconnected
+            } else if (o123 != o124 && o341 != o342)
+            {
+                return true;// general case
+            } else
+            {
+                return false; // Doesn't fall in any of the above cases
+            }
         }
 
-        private static float FindYIntercept(Vector2 p1, float m)
+        public static bool IsParallel(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
         {
-            // derivation:
-            // y = mx + b
-            // b = y - mx
-            return p1.y - (m * p1.x);
+            return (p2.y - p1.y) * (p4.x - p3.x) == (p4.y - p3.y) * (p2.x - p1.x);
         }
     }
 }
