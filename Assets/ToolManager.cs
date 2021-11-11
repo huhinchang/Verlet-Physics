@@ -11,9 +11,7 @@ public class ToolManager : MonoBehaviour
     class MetaTool
     {
         public Button Button;
-        public GameObject GameObject;
-        [TextArea(3, 5)]
-        public string Desc;
+        public Tool Tool;
     }
 
     [SerializeField]
@@ -30,27 +28,32 @@ public class ToolManager : MonoBehaviour
         foreach (var metaTool in _tools)
         {
             //_toolDictionary.Add(tool.Button, tool);
-            metaTool.GameObject.GetComponent<Tool>().Setup(_solvers);
-            metaTool.GameObject.SetActive(false);
+            metaTool.Tool.Setup(_solvers);
+            metaTool.Tool.gameObject.SetActive(false);
             metaTool.Button.onClick.AddListener(() => ChangeTool(metaTool));
+            metaTool.Tool.OnChangeTooltip += HandleShowTooltip;
         }
         ChangeTool(_tools[0]);
     }
 
     private void OnDestroy()
     {
-        foreach (var tool in _tools)
+        foreach (var metaTool in _tools)
         {
-            tool.Button.onClick.RemoveAllListeners();
+            metaTool.Button.onClick.RemoveAllListeners();
+            metaTool.Tool.OnChangeTooltip -= HandleShowTooltip;
         }
     }
 
     private void ChangeTool(MetaTool tool)
     {
-        _currentTool?.GameObject.SetActive(false);
-        _currentTool = tool;
+        _currentTool?.Tool.Deselect();
 
-        _currentTool.GameObject.SetActive(true);
-        _descText.text = _currentTool.Desc;
+        _currentTool = tool;
+        _currentTool.Tool.Select();
+    }
+
+    private void HandleShowTooltip(string desc) {
+        _descText.text = desc;
     }
 }
