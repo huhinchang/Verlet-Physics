@@ -22,7 +22,7 @@ public class PaintTool : Tool
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Debug.Log("Painting");
-            _solvers.ForEach(v => v.SetNodeLocked(locked));
+            _solvers.ForEach(v => v.SetClosestPointLocked(locked));
         }
     }
 }

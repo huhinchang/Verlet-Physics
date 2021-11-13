@@ -9,14 +9,14 @@ public class PlaceTool : Tool
     {
         if (Input.GetMouseButtonDown(0))
         {
-            PlaceNode(false);
+            PlacePoint(false);
         } else if (Input.GetMouseButtonDown(1))
         {
-            PlaceNode(true);
+            PlacePoint(true);
         }
     }
 
-    private void PlaceNode(bool locked)
+    private void PlacePoint(bool locked)
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {

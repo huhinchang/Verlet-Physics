@@ -54,20 +54,21 @@ public abstract class VerletSolver : MonoBehaviour
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
     private Vector2 _knifeStart, _knifeEnd;
-    private int selected = -1;
+    private int _selected = -1;
 
     public void PlaceNode(bool locked)
     {
         _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
         uint newPoint = (uint)_points.Count - 1;
-        if (selected != -1)
-        {
-            _sticks.Add(new Stick((uint)selected, newPoint, Vector2.Distance(_points[selected].Position, _points[(int)newPoint].Position)));
-        }
-        selected = (int)newPoint;
+        LinkToSelected((int)newPoint, setAsSelected: true);
     }
 
-    public void SetNodeLocked(bool locked)
+    public void SelectClosestPoint()
+    {
+        _selected = GetPointClosestToMouse(_points, point => point.Position).Item3;
+    }
+
+    public void SetClosestPointLocked(bool locked)
     {
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
         _points[closestPoint.Item3] = new Point(closestPoint.Item1.Position, locked ? 1 : 0);
@@ -79,7 +80,8 @@ public abstract class VerletSolver : MonoBehaviour
         _knifeEnd = end;
     }
 
-    public void Cut() {
+    public void Cut()
+    {
         for (int i = _sticks.Count - 1; i >= 0; i--)
         {
             Stick s = _sticks[i];
@@ -90,6 +92,65 @@ public abstract class VerletSolver : MonoBehaviour
                 _sticks.RemoveAt(i);
             }
         }
+    }
+
+    public void LinkClosestPointToSelected()
+    {
+        var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
+        LinkToSelected(closestPoint.Item3, setAsSelected: false);
+    }
+
+    private void SelectPoint(int index)
+    {
+        if (index >= _points.Count)
+        {
+            Debug.LogError($"index was out of bounds");
+            return;
+        }
+        _selected = index;
+    }
+
+    private void LinkToSelected(int index, bool setAsSelected)
+    {
+        if (index >= _points.Count)
+        {
+            Debug.LogError($"index was out of bounds");
+            return;
+        }
+
+        if (_selected >= 0)
+        {
+            LinkNodes(_selected, index);
+        }
+
+        if (setAsSelected)
+        {
+            SelectPoint(index);
+        }
+    }
+
+    private void LinkNodes(int a, int b)
+    {
+        if (a >= _points.Count)
+        {
+            Debug.LogError($"a was out of bounds");
+            return;
+        }
+
+        if (b >= _points.Count)
+        {
+            Debug.LogError($"b was out of bounds");
+            return;
+        }
+
+        foreach (var stick in _sticks)
+        {
+            if ((stick.A == a && stick.B == b) || (stick.B == a && stick.A == b))
+            {
+                return; // stick linking same points already exists
+            }
+        }
+        _sticks.Add(new Stick((uint)a, (uint)b, Vector2.Distance(_points[a].Position, _points[b].Position)));
     }
 
     private void OnDrawGizmos()
@@ -104,7 +165,7 @@ public abstract class VerletSolver : MonoBehaviour
         {
             Vector2 aPosition = _points[(int)s.A].Position;
             Vector2 bPosition = _points[(int)s.B].Position;
-            Gizmos.color = Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd) ?  Color.black : _debugColor;
+            Gizmos.color = Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd) ? Color.black : _debugColor;
             Gizmos.DrawLine(_points[(int)s.A].Position, _points[(int)s.B].Position);
         }
     }
