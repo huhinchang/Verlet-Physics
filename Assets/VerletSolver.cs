@@ -73,31 +73,33 @@ public abstract class VerletSolver : MonoBehaviour
     {
         _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
         uint newPoint = (uint)_points.Count - 1;
-        LinkToSelected((int)newPoint, setAsSelected: true);
+        LinkToSelected((int)newPoint, autoSelect: true);
 
         var pointInstance = _pointPooler.SpawnFromPool();
         pointInstance.transform.position = _points[(int) newPoint].Position;
     }
 
     // sets the point closest to the mouse as selected
-    public void SelectPointClosestToMouse()
+    public void SelectClosest()
     {
         _selected = GetPointClosestToMouse(_points, point => point.Position).Item3;
     }
 
-    // sets the point closest to the mouse as locked
-    public void SetClosestPointLocked(bool locked)
+    // sets the lock status of the point closest to the mouse
+    public void LockClosest(bool locked)
     {
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
         _points[closestPoint.Item3] = new Point(closestPoint.Item1.Position, locked ? 1 : 0);
     }
 
+    // sets the start and end points of the knife
     public void SetKnife(Vector2 start, Vector2 end)
     {
         _knifeStart = start;
         _knifeEnd = end;
     }
 
+    // Removes sticks that intersect the slice
     public void Cut()
     {
         for (int i = _sticks.Count - 1; i >= 0; i--)
@@ -112,12 +114,14 @@ public abstract class VerletSolver : MonoBehaviour
         }
     }
 
-    public void LinkClosestPointToSelected()
+    // Links the point closest to the mouse with the selected point
+    public void LinkClosestToSelected()
     {
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
-        LinkToSelected(closestPoint.Item3, setAsSelected: false);
+        LinkToSelected(closestPoint.Item3, autoSelect: false);
     }
 
+    // Selects the point at the index
     private void SelectPoint(int index)
     {
         if (index >= _points.Count)
@@ -128,7 +132,8 @@ public abstract class VerletSolver : MonoBehaviour
         _selected = index;
     }
 
-    private void LinkToSelected(int index, bool setAsSelected)
+    // Links the given point with the selected point
+    private void LinkToSelected(int index, bool autoSelect)
     {
         if (index >= _points.Count)
         {
@@ -141,12 +146,13 @@ public abstract class VerletSolver : MonoBehaviour
             LinkNodes(_selected, index);
         }
 
-        if (setAsSelected)
+        if (autoSelect)
         {
             SelectPoint(index);
         }
     }
 
+    // Links 2 nodes
     private void LinkNodes(int a, int b)
     {
         if (a >= _points.Count)

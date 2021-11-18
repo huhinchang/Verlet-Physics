@@ -22,7 +22,7 @@ public class LinkTool : Tool
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Debug.Log("Selecting");
-            _solvers.ForEach(v => v.SelectPointClosestToMouse());
+            _solvers.ForEach(v => v.SelectClosest());
         }
     }
 
@@ -31,7 +31,7 @@ public class LinkTool : Tool
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Debug.Log("Selecting");
-            _solvers.ForEach(v => v.LinkClosestPointToSelected());
+            _solvers.ForEach(v => v.LinkClosestToSelected());
         }
     }
 }
