@@ -1,25 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;//List
 using UnityEngine;
+using System;
 
 public enum ObjectPoolerMaxSizeReachedBehavior { ReuseOldest, CancelSpawn }
 
 public class ObjectPooler<T> : MonoBehaviour where T: Component
 {
+    public Action OnMaxSizeReached;
     private Transform _parent = default;
     private GameObject _prefab = default;
-    private int _maxSize = default;
-    ObjectPoolerMaxSizeReachedBehavior _maxSizeReachedBehavior = default;
+    private int? _maxSize = default;
+    private ObjectPoolerMaxSizeReachedBehavior _maxSizeReachedBehavior = default;
 
-    List<T> _activePool = new List<T>();
-    Queue<T> _disabledPool = new Queue<T>();
+    private List<T> _activePool = new List<T>();
+    private Queue<T> _disabledPool = new Queue<T>();
 
-    public ObjectPooler(GameObject prefab, Transform parent, int initialSize, int maxSize, ObjectPoolerMaxSizeReachedBehavior maxSizeReachedBehavior)
+    public ObjectPooler(GameObject prefab, Transform parent, int initialSize, int? maxSize, ObjectPoolerMaxSizeReachedBehavior maxSizeReachedBehavior)
     {
         _prefab = prefab;
         _parent = parent;
 
-        if (maxSize <= 0)
+        if (maxSize != null && maxSize <= 0)
         {
             Debug.LogWarning($"Max size mus be positive. Setting it to be equal to initial size {initialSize}");
             _maxSize = initialSize;
@@ -41,12 +43,16 @@ public class ObjectPooler<T> : MonoBehaviour where T: Component
         }
     }
 
+    public bool CanSpawn() {
+        return _maxSize == null || _activePool.Count < _maxSize;
+    }
+
     public T SpawnFromPool()
     {
         T instance = null;
 
         // special logic for when max size reached
-        if (_activePool.Count == _maxSize) {
+        if (!CanSpawn()) {
             if (_maxSizeReachedBehavior == ObjectPoolerMaxSizeReachedBehavior.CancelSpawn) {
                 return null;
             } else {
@@ -58,7 +64,7 @@ public class ObjectPooler<T> : MonoBehaviour where T: Component
         if (_disabledPool.Count > 0)
         {
             instance = _disabledPool.Dequeue();
-        } else if (_activePool.Count < _maxSize)
+        } else
         {
             instance = Instantiate(_prefab, _parent).GetComponent<T>();
         }

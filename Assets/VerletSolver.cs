@@ -64,8 +64,24 @@ public abstract class VerletSolver : MonoBehaviour
 
     private void Awake()
     {
-        _pointPooler = new ObjectPooler<SpriteRenderer>(_pointPrefab, parent: null, initialSize: 0, maxSize: 100, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);
-        _stickPooler = new ObjectPooler<LineRenderer>(_stickPrefab, parent: null, initialSize: 0, maxSize: 100, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);
+        _pointPooler = new ObjectPooler<SpriteRenderer>(_pointPrefab, parent: null, initialSize: 0, maxSize: null, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);
+        _stickPooler = new ObjectPooler<LineRenderer>(_stickPrefab, parent: null, initialSize: 0, maxSize: null, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);  
+    }
+
+    private void OnEnable()
+    {
+        _pointPooler.OnMaxSizeReached += HandleMaxSizeReached;
+        _stickPooler.OnMaxSizeReached += HandleMaxSizeReached;
+    }
+
+    private void OnDisable()
+    {
+        _pointPooler.OnMaxSizeReached -= HandleMaxSizeReached;
+        _stickPooler.OnMaxSizeReached -= HandleMaxSizeReached;
+    }
+
+    private void HandleMaxSizeReached() {
+        throw new NotImplementedException("Max Size Reached");
     }
 
     // Creates a point at the mouse position
@@ -175,6 +191,9 @@ public abstract class VerletSolver : MonoBehaviour
             }
         }
         _sticks.Add(new Stick((uint)a, (uint)b, Vector2.Distance(_points[a].Position, _points[b].Position)));
+        var stickInstance = _stickPooler.SpawnFromPool();
+        stickInstance.SetPosition(0, _points[a].Position);
+        stickInstance.SetPosition(1, _points[b].Position);
     }
 
     private void OnDrawGizmos()
