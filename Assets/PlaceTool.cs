@@ -21,7 +21,7 @@ public class PlaceTool : Tool
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             Debug.Log("Placing");
-            _solvers.ForEach(v => v.PlaceNode(locked));
+            _solvers.ForEach(v => v.CreatePointAtMouse(locked));
         }
     }
 }

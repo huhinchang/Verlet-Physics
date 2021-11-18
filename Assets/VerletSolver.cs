@@ -47,27 +47,45 @@ public abstract class VerletSolver : MonoBehaviour
     private const float _kDebugLargeRadius = 0.2f;
 
     [SerializeField]
-    protected Color _debugColor = default;
+    private GameObject _pointPrefab = default;
+    [SerializeField]
+    private GameObject _stickPrefab = default;
+    [SerializeField]
+    private Color _debugColor = default;
     [SerializeField]
     protected int _constraintReps = default;
 
+    ObjectPooler<SpriteRenderer> _pointPooler;
+    ObjectPooler<LineRenderer> _stickPooler;
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
     private Vector2 _knifeStart, _knifeEnd;
     private int _selected = -1;
 
-    public void PlaceNode(bool locked)
+    private void Awake()
+    {
+        _pointPooler = new ObjectPooler<SpriteRenderer>(_pointPrefab, parent: null, initialSize: 0, maxSize: 100, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);
+        _stickPooler = new ObjectPooler<LineRenderer>(_stickPrefab, parent: null, initialSize: 0, maxSize: 100, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);
+    }
+
+    // Creates a point at the mouse position
+    public void CreatePointAtMouse(bool locked)
     {
         _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
         uint newPoint = (uint)_points.Count - 1;
         LinkToSelected((int)newPoint, setAsSelected: true);
+
+        var pointInstance = _pointPooler.SpawnFromPool();
+        pointInstance.transform.position = _points[(int) newPoint].Position;
     }
 
-    public void SelectClosestPoint()
+    // sets the point closest to the mouse as selected
+    public void SelectPointClosestToMouse()
     {
         _selected = GetPointClosestToMouse(_points, point => point.Position).Item3;
     }
 
+    // sets the point closest to the mouse as locked
     public void SetClosestPointLocked(bool locked)
     {
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
