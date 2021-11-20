@@ -68,6 +68,7 @@ public class ObjectPooler<T> where T: Component
         if (_disabledPool.Count > 0)
         {
             instance = _disabledPool.Dequeue();
+            instance.gameObject.SetActive(true);
         } else
         {
             instance = GameObject.Instantiate(_prefab, _parent).GetComponent<T>();

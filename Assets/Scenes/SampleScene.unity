@@ -451,7 +451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
-  _themeColor: {r: 0.7372549, g: 0, b: 0.3137255, a: 0.69803923}
+  _themeColor: {r: 1, g: 0, b: 0.42553234, a: 1}
   _constraintReps: 3
 --- !u!4 &210031356
 Transform:
@@ -502,7 +502,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 176.8355, y: -194.5}
-  m_SizeDelta: {x: 170, y: 389}
+  m_SizeDelta: {x: 400, y: 389}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &289809101
 MonoBehaviour:
@@ -613,7 +613,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 1, g: 0.994028, b: 0.9009434, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1255,7 +1255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
-  _themeColor: {r: 0, g: 0.5803922, b: 0.75294125, a: 0.69803923}
+  _themeColor: {r: 0, g: 1, b: 0.7038727, a: 1}
   _constraintReps: 8
   _verletShader: {fileID: 7200000, guid: 7f011ccd70e755944b6e49908f0fc839, type: 3}
 --- !u!4 &842113787
@@ -1615,7 +1615,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 388.6, y: 0}
+  m_SizeDelta: {x: 400, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1145259792
 MonoBehaviour:
@@ -1779,7 +1779,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 353.671, y: -194.5}
-  m_SizeDelta: {x: 170, y: 389}
+  m_SizeDelta: {x: 400, y: 389}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1333316275
 MonoBehaviour:
@@ -1869,7 +1869,6 @@ MonoBehaviour:
   _descText: {fileID: 1697449944}
   _solvers:
   - {fileID: 210031355}
-  - {fileID: 842113786}
   _tools:
   - Button: {fileID: 1127031273}
     Tool: {fileID: 1808589088}
@@ -2169,7 +2168,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 171.2816, y: 0}
+  m_SizeDelta: {x: 513.1454, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1697449944
 MonoBehaviour:
@@ -2220,8 +2219,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17
-  m_fontSizeBase: 17
+  m_fontSize: 40.57
+  m_fontSizeBase: 40.57
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2280,7 +2279,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1791424670}
   - component: {fileID: 1791424673}
-  - component: {fileID: 1791424672}
   - component: {fileID: 1791424671}
   m_Layer: 7
   m_Name: GPU Camera
@@ -2336,14 +2334,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!81 &1791424672
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1791424669}
-  m_Enabled: 1
 --- !u!20 &1791424673
 Camera:
   m_ObjectHideFlags: 0

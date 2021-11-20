@@ -64,8 +64,8 @@ public abstract class VerletSolver : MonoBehaviour
 
     private void Awake()
     {
-        _pointWidgetPooler = new ObjectPooler<SpriteRenderer>(_pointWidgetPrefab, parent: null);
-        _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: null);
+        _pointWidgetPooler = new ObjectPooler<SpriteRenderer>(_pointWidgetPrefab, parent: transform);
+        _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: transform);
     }
 
     private void HandleMaxSizeReached()
