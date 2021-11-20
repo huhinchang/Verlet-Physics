@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PointWidget : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    SpriteRenderer _spriteRenderer = default;
+
     void Start()
     {
         

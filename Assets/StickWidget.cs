@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class StickWidget : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    LineRenderer _lineRenderer = default;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void UpdateState(Vector2 a, Vector2 b) {
+        _lineRenderer.SetPosition(0, a);
+        _lineRenderer.SetPosition(1, b);
     }
 }

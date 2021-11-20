@@ -56,7 +56,7 @@ public abstract class VerletSolver : MonoBehaviour
     protected int _constraintReps = default;
 
     ObjectPooler<SpriteRenderer> _pointWidgetPooler;
-    ObjectPooler<LineRenderer> _stickWidgetPooler;
+    ObjectPooler<StickWidget> _stickWidgetPooler;
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
     private Vector2 _knifeStart, _knifeEnd;
@@ -65,11 +65,26 @@ public abstract class VerletSolver : MonoBehaviour
     private void Awake()
     {
         _pointWidgetPooler = new ObjectPooler<SpriteRenderer>(_pointWidgetPrefab, parent: null);
-        _stickWidgetPooler = new ObjectPooler<LineRenderer>(_stickWidgetPrefab, parent: null);  
+        _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: null);
     }
 
-    private void HandleMaxSizeReached() {
+    private void HandleMaxSizeReached()
+    {
         throw new NotImplementedException("Max Size Reached");
+    }
+
+    private void UpdateStickWidgets()
+    {
+        var widgets = _stickWidgetPooler.ActivePool;
+        if (widgets.Count != _sticks.Count)
+        {
+            Debug.LogError("stick widgets count was different from actual stick count!");
+        }
+        for (int i = 0; i < _sticks.Count; i++)
+        {
+            var stick = _sticks[i];
+            widgets[i].UpdateState(_points[stick.A].Position, _points[stick.B].Position);
+        }
     }
 
     // Creates a point at the mouse position
@@ -117,6 +132,7 @@ public abstract class VerletSolver : MonoBehaviour
                 _stickWidgetPooler.ReturnToPoolAt(0);
             }
         }
+        UpdateStickWidgets();
     }
 
     // Links the point closest to the mouse with the selected point
@@ -148,7 +164,7 @@ public abstract class VerletSolver : MonoBehaviour
 
         if (_selected >= 0)
         {
-            LinkNodes(_selected, index);
+            LinkPoints(_selected, index);
         }
 
         if (autoSelect)
@@ -158,7 +174,7 @@ public abstract class VerletSolver : MonoBehaviour
     }
 
     // Links 2 nodes
-    private void LinkNodes(int a, int b)
+    private void LinkPoints(int a, int b)
     {
         if (a >= _points.Count)
         {
@@ -182,9 +198,8 @@ public abstract class VerletSolver : MonoBehaviour
         _sticks.Add(new Stick(a, b, Vector2.Distance(_points[a].Position, _points[b].Position)));
 
         Debug.Log($"Attempting to add key {_sticks.Count - 1}");
-        var stickWidgetInstance = _stickWidgetPooler.SpawnFromPool();
-        stickWidgetInstance.SetPosition(0, _points[a].Position);
-        stickWidgetInstance.SetPosition(1, _points[b].Position);
+        _stickWidgetPooler.SpawnFromPool();
+        UpdateStickWidgets();
     }
 
     private void OnDrawGizmos()

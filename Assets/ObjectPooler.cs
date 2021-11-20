@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 public enum ObjectPoolerMaxSizeReachedBehavior { ReuseOldest, CancelSpawn }
 
-public class ObjectPooler<T> : MonoBehaviour where T: Component
+public class ObjectPooler<T> where T: Component
 {
     public Action OnMaxSizeReached;
 
@@ -18,7 +18,7 @@ public class ObjectPooler<T> : MonoBehaviour where T: Component
     private List<T> _activePool = new List<T>();
     private Queue<T> _disabledPool = new Queue<T>();
 
-    public ReadOnlyCollection<T> GetActiveObjects() => _activePool.AsReadOnly();
+    public ReadOnlyCollection<T> ActivePool => _activePool.AsReadOnly();
 
     public ObjectPooler(GameObject prefab, Transform parent, int initialSize = 0, int? maxSize = null, ObjectPoolerMaxSizeReachedBehavior maxSizeReachedBehavior = ObjectPoolerMaxSizeReachedBehavior.ReuseOldest)
     {
@@ -36,7 +36,7 @@ public class ObjectPooler<T> : MonoBehaviour where T: Component
 
         _maxSizeReachedBehavior = maxSizeReachedBehavior;
 
-        if (initialSize <= 0)
+        if (initialSize < 0)
         {
             Debug.LogWarning("Initial size must be npn-negative. Setting it to be 0");
             initialSize = 0;
@@ -70,7 +70,7 @@ public class ObjectPooler<T> : MonoBehaviour where T: Component
             instance = _disabledPool.Dequeue();
         } else
         {
-            instance = Instantiate(_prefab, _parent).GetComponent<T>();
+            instance = GameObject.Instantiate(_prefab, _parent).GetComponent<T>();
         }
         _activePool.Add(instance);
 

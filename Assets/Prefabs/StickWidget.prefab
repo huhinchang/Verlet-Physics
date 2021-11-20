@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5249876493556452088}
   - component: {fileID: 1763827548006179056}
+  - component: {fileID: 4697291229217981726}
   m_Layer: 0
   m_Name: StickWidget
   m_TagString: Untagged
@@ -130,3 +131,16 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &4697291229217981726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7999948457767670936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3176b26b4173d11449b074156e60120c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lineRenderer: {fileID: 1763827548006179056}
