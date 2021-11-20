@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6759382316743872867}
   - component: {fileID: 9155483650525809258}
+  - component: {fileID: 7265146445001793786}
   m_Layer: 0
   m_Name: PointWidget
   m_TagString: Untagged
@@ -83,3 +84,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7265146445001793786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8795791756108320515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7429471f6329f5478bc53e7c5d9b167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -55,8 +55,8 @@ public abstract class VerletSolver : MonoBehaviour
     [SerializeField]
     protected int _constraintReps = default;
 
-    ObjectPooler<int, SpriteRenderer> _pointWidgetPooler;
-    ObjectPooler<int, LineRenderer> _stickWidgetPooler;
+    ObjectPooler<SpriteRenderer> _pointWidgetPooler;
+    ObjectPooler<LineRenderer> _stickWidgetPooler;
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
     private Vector2 _knifeStart, _knifeEnd;
@@ -64,8 +64,8 @@ public abstract class VerletSolver : MonoBehaviour
 
     private void Awake()
     {
-        _pointWidgetPooler = new ObjectPooler<int, SpriteRenderer>(_pointWidgetPrefab, parent: null);
-        _stickWidgetPooler = new ObjectPooler<int, LineRenderer>(_stickWidgetPrefab, parent: null);  
+        _pointWidgetPooler = new ObjectPooler<SpriteRenderer>(_pointWidgetPrefab, parent: null);
+        _stickWidgetPooler = new ObjectPooler<LineRenderer>(_stickWidgetPrefab, parent: null);  
     }
 
     private void HandleMaxSizeReached() {
@@ -79,7 +79,7 @@ public abstract class VerletSolver : MonoBehaviour
         int newPointIndex = _points.Count - 1;
         LinkToSelected(newPointIndex, autoSelect: true);
 
-        var pointWidgetInstance = _pointWidgetPooler.SpawnFromPool(newPointIndex);
+        var pointWidgetInstance = _pointWidgetPooler.SpawnFromPool();
         pointWidgetInstance.transform.position = _points[newPointIndex].Position;
     }
 
@@ -114,8 +114,7 @@ public abstract class VerletSolver : MonoBehaviour
             if (Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd))
             {
                 _sticks.RemoveAt(i);
-                Debug.Log($"Attempting to remove key {i}");
-                _stickWidgetPooler.ReturnToPool(i);
+                _stickWidgetPooler.ReturnToPoolAt(0);
             }
         }
     }
@@ -183,7 +182,7 @@ public abstract class VerletSolver : MonoBehaviour
         _sticks.Add(new Stick(a, b, Vector2.Distance(_points[a].Position, _points[b].Position)));
 
         Debug.Log($"Attempting to add key {_sticks.Count - 1}");
-        var stickWidgetInstance = _stickWidgetPooler.SpawnFromPool(_sticks.Count - 1);
+        var stickWidgetInstance = _stickWidgetPooler.SpawnFromPool();
         stickWidgetInstance.SetPosition(0, _points[a].Position);
         stickWidgetInstance.SetPosition(1, _points[b].Position);
     }
