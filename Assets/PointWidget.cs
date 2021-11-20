@@ -13,9 +13,14 @@ public class PointWidget : MonoBehaviour
         Assert.IsNotNull(_spriteRenderer);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize(Color color, int layer)
     {
-        
+        _spriteRenderer.color = color;
+        gameObject.layer = layer;
+    }
+
+    public void UpdateState(Vector2 pos)
+    {
+        transform.position = pos;
     }
 }

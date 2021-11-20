@@ -55,7 +55,7 @@ public abstract class VerletSolver : MonoBehaviour
     [SerializeField]
     protected int _constraintReps = default;
 
-    ObjectPooler<SpriteRenderer> _pointWidgetPooler;
+    ObjectPooler<PointWidget> _pointWidgetPooler;
     ObjectPooler<StickWidget> _stickWidgetPooler;
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
@@ -64,13 +64,32 @@ public abstract class VerletSolver : MonoBehaviour
 
     private void Awake()
     {
-        _pointWidgetPooler = new ObjectPooler<SpriteRenderer>(_pointWidgetPrefab, parent: transform);
+        _pointWidgetPooler = new ObjectPooler<PointWidget>(_pointWidgetPrefab, parent: transform);
         _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: transform);
     }
 
     private void HandleMaxSizeReached()
     {
         throw new NotImplementedException("Max Size Reached");
+    }
+
+    public virtual void Solve() {
+        UpdatePointWidgets();
+        UpdateStickWidgets();
+    }
+
+    private void UpdatePointWidgets()
+    {
+        var widgets = _pointWidgetPooler.ActivePool;
+        if (widgets.Count != _points.Count)
+        {
+            Debug.LogError("point widgets count was different from actual stick count!");
+        }
+        for (int i = 0; i < _points.Count; i++)
+        {
+            var point = _points[i];
+            widgets[i].UpdateState(point.Position);
+        }
     }
 
     private void UpdateStickWidgets()
@@ -94,8 +113,8 @@ public abstract class VerletSolver : MonoBehaviour
         int newPointIndex = _points.Count - 1;
         LinkToSelected(newPointIndex, autoSelect: true);
 
-        var pointWidgetInstance = _pointWidgetPooler.SpawnFromPool();
-        pointWidgetInstance.transform.position = _points[newPointIndex].Position;
+       _pointWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
+        UpdatePointWidgets();
     }
 
     // sets the point closest to the mouse as selected

@@ -50,6 +50,8 @@ public class GpuVerletSolver : VerletSolver
             sticksBuffer.Release();
             _sticks = output.ToList();
         }
+
+        base.Solve();
     }
 
     void Update()

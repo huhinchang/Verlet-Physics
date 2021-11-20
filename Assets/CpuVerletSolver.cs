@@ -4,7 +4,7 @@ using UnityEngine;
 using Utils;
 
 public class CpuVerletSolver : VerletSolver {
-    public void Solve() {
+    public override void Solve() {
         for (int i = 0; i < _points.Count; i++) {
             Point p = _points[i];
             if (p.Locked.IsFalse()) {
@@ -50,6 +50,8 @@ public class CpuVerletSolver : VerletSolver {
                 */
             }
         }
+
+        base.Solve();
     }
 
     void Update() {
