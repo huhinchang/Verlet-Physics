@@ -51,7 +51,7 @@ public abstract class VerletSolver : MonoBehaviour
     [SerializeField]
     private GameObject _stickWidgetPrefab = default;
     [SerializeField]
-    private Color _debugColor = default;
+    private Color _themeColor = default;
     [SerializeField]
     protected int _constraintReps = default;
 
@@ -197,14 +197,13 @@ public abstract class VerletSolver : MonoBehaviour
         }
         _sticks.Add(new Stick(a, b, Vector2.Distance(_points[a].Position, _points[b].Position)));
 
-        Debug.Log($"Attempting to add key {_sticks.Count - 1}");
-        _stickWidgetPooler.SpawnFromPool();
+        _stickWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
         UpdateStickWidgets();
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = _debugColor;
+        Gizmos.color = _themeColor;
         foreach (var p in _points)
         {
             Gizmos.DrawSphere(p.Position, p.Locked.IsTrue() ? _kDebugLargeRadius : _kDebugSmallRadius);
@@ -214,7 +213,7 @@ public abstract class VerletSolver : MonoBehaviour
         {
             Vector2 aPosition = _points[s.A].Position;
             Vector2 bPosition = _points[s.B].Position;
-            Gizmos.color = Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd) ? Color.black : _debugColor;
+            Gizmos.color = Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd) ? Color.black : _themeColor;
             Gizmos.DrawLine(_points[s.A].Position, _points[s.B].Position);
         }
     }
