@@ -31,10 +31,10 @@ public abstract class VerletSolver : MonoBehaviour
     [Serializable]
     public struct Stick
     {
-        public uint A { get; private set; }
-        public uint B { get; private set; }
+        public int A { get; private set; }
+        public int B { get; private set; }
         public float Length { get; private set; }
-        public Stick(uint a, uint b, float length)
+        public Stick(int a, int b, float length)
         {
             A = a;
             B = b;
@@ -47,16 +47,16 @@ public abstract class VerletSolver : MonoBehaviour
     private const float _kDebugLargeRadius = 0.2f;
 
     [SerializeField]
-    private GameObject _pointPrefab = default;
+    private GameObject _pointWidgetPrefab = default;
     [SerializeField]
-    private GameObject _stickPrefab = default;
+    private GameObject _stickWidgetPrefab = default;
     [SerializeField]
     private Color _debugColor = default;
     [SerializeField]
     protected int _constraintReps = default;
 
-    ObjectPooler<SpriteRenderer> _pointPooler;
-    ObjectPooler<LineRenderer> _stickPooler;
+    ObjectPooler<int, SpriteRenderer> _pointWidgetPooler;
+    ObjectPooler<int, LineRenderer> _stickWidgetPooler;
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
     private Vector2 _knifeStart, _knifeEnd;
@@ -64,20 +64,8 @@ public abstract class VerletSolver : MonoBehaviour
 
     private void Awake()
     {
-        _pointPooler = new ObjectPooler<SpriteRenderer>(_pointPrefab, parent: null, initialSize: 0, maxSize: null, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);
-        _stickPooler = new ObjectPooler<LineRenderer>(_stickPrefab, parent: null, initialSize: 0, maxSize: null, ObjectPoolerMaxSizeReachedBehavior.CancelSpawn);  
-    }
-
-    private void OnEnable()
-    {
-        _pointPooler.OnMaxSizeReached += HandleMaxSizeReached;
-        _stickPooler.OnMaxSizeReached += HandleMaxSizeReached;
-    }
-
-    private void OnDisable()
-    {
-        _pointPooler.OnMaxSizeReached -= HandleMaxSizeReached;
-        _stickPooler.OnMaxSizeReached -= HandleMaxSizeReached;
+        _pointWidgetPooler = new ObjectPooler<int, SpriteRenderer>(_pointWidgetPrefab, parent: null);
+        _stickWidgetPooler = new ObjectPooler<int, LineRenderer>(_stickWidgetPrefab, parent: null);  
     }
 
     private void HandleMaxSizeReached() {
@@ -88,11 +76,11 @@ public abstract class VerletSolver : MonoBehaviour
     public void CreatePointAtMouse(bool locked)
     {
         _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
-        uint newPoint = (uint)_points.Count - 1;
-        LinkToSelected((int)newPoint, autoSelect: true);
+        int newPointIndex = _points.Count - 1;
+        LinkToSelected(newPointIndex, autoSelect: true);
 
-        var pointInstance = _pointPooler.SpawnFromPool();
-        pointInstance.transform.position = _points[(int) newPoint].Position;
+        var pointWidgetInstance = _pointWidgetPooler.SpawnFromPool(newPointIndex);
+        pointWidgetInstance.transform.position = _points[newPointIndex].Position;
     }
 
     // sets the point closest to the mouse as selected
@@ -121,11 +109,12 @@ public abstract class VerletSolver : MonoBehaviour
         for (int i = _sticks.Count - 1; i >= 0; i--)
         {
             Stick s = _sticks[i];
-            Vector2 aPosition = _points[(int)s.A].Position;
-            Vector2 bPosition = _points[(int)s.B].Position;
+            Vector2 aPosition = _points[s.A].Position;
+            Vector2 bPosition = _points[s.B].Position;
             if (Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd))
             {
                 _sticks.RemoveAt(i);
+                _stickWidgetPooler.ReturnToPool(i);
             }
         }
     }
@@ -190,10 +179,11 @@ public abstract class VerletSolver : MonoBehaviour
                 return; // stick linking same points already exists
             }
         }
-        _sticks.Add(new Stick((uint)a, (uint)b, Vector2.Distance(_points[a].Position, _points[b].Position)));
-        var stickInstance = _stickPooler.SpawnFromPool();
-        stickInstance.SetPosition(0, _points[a].Position);
-        stickInstance.SetPosition(1, _points[b].Position);
+        _sticks.Add(new Stick(a, b, Vector2.Distance(_points[a].Position, _points[b].Position)));
+
+        var stickWidgetInstance = _stickWidgetPooler.SpawnFromPool(_sticks.Count - 1);
+        stickWidgetInstance.SetPosition(0, _points[a].Position);
+        stickWidgetInstance.SetPosition(1, _points[b].Position);
     }
 
     private void OnDrawGizmos()
@@ -206,15 +196,15 @@ public abstract class VerletSolver : MonoBehaviour
 
         foreach (var s in _sticks)
         {
-            Vector2 aPosition = _points[(int)s.A].Position;
-            Vector2 bPosition = _points[(int)s.B].Position;
+            Vector2 aPosition = _points[s.A].Position;
+            Vector2 bPosition = _points[s.B].Position;
             Gizmos.color = Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd) ? Color.black : _debugColor;
-            Gizmos.DrawLine(_points[(int)s.A].Position, _points[(int)s.B].Position);
+            Gizmos.DrawLine(_points[s.A].Position, _points[s.B].Position);
         }
     }
 
     // ############# UTILS ##############
-    private static (T, float, int) GetPointClosestToMouse<T>(List<T> points, Func<T, Vector2> positionGetter)
+    private (T, float, int) GetPointClosestToMouse<T>(List<T> points, Func<T, Vector2> positionGetter)
     {
         var mousePos = Utils.Generic.GetMousePosition();
 

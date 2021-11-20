@@ -30,6 +30,7 @@ public class KnifeTool : Tool
 
     private void OnDrawGizmos()
     {
+        Debug.Log("Here");
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(_start, _end);
     }

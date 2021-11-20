@@ -458,8 +458,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a607bb84577634fac7f860a5764b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pointPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
-  _stickPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
+  _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
+  _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
   _debugColor: {r: 1, g: 0, b: 1, a: 1}
   _constraintReps: 3
 --- !u!20 &519420031
@@ -531,8 +531,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4431ca8788d89ca4280f94bf574d25b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pointPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
-  _stickPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
+  _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
+  _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
   _debugColor: {r: 0, g: 1, b: 1, a: 1}
   _constraintReps: 8
   _verletShader: {fileID: 7200000, guid: 7f011ccd70e755944b6e49908f0fc839, type: 3}

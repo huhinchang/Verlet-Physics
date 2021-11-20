@@ -1,63 +1,31 @@
 ﻿using System.Collections;
-using System.Collections.Generic;//List
+using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum ObjectPoolerMaxSizeReachedBehavior { ReuseOldest, CancelSpawn }
-
-public class ObjectPooler<T> : MonoBehaviour where T: Component
+public class ObjectPooler<TKey, TVal> where TVal : Component
 {
-    public Action OnMaxSizeReached;
     private Transform _parent = default;
     private GameObject _prefab = default;
-    private int? _maxSize = default;
-    private ObjectPoolerMaxSizeReachedBehavior _maxSizeReachedBehavior = default;
 
-    private List<T> _activePool = new List<T>();
-    private Queue<T> _disabledPool = new Queue<T>();
+    private Dictionary<TKey, TVal> _activePool = new Dictionary<TKey, TVal>();
+    private Queue<TVal> _disabledPool = new Queue<TVal>();
 
-    public ObjectPooler(GameObject prefab, Transform parent, int initialSize, int? maxSize, ObjectPoolerMaxSizeReachedBehavior maxSizeReachedBehavior)
+    public ObjectPooler(GameObject prefab, Transform parent)
     {
         _prefab = prefab;
         _parent = parent;
-
-        if (maxSize != null && maxSize <= 0)
-        {
-            Debug.LogWarning($"Max size mus be positive. Setting it to be equal to initial size {initialSize}");
-            _maxSize = initialSize;
-        } else
-        {
-            _maxSize = maxSize;
-        }
-
-        _maxSizeReachedBehavior = maxSizeReachedBehavior;
-
-        if (initialSize <= 0)
-        {
-            Debug.LogWarning("Initial size must be npn-negative. Setting it to be 0");
-            initialSize = 0;
-        }
-        for (int i = 0; i < initialSize; i++)
-        {
-            SpawnFromPool();
-        }
     }
 
-    public bool CanSpawn() {
-        return _maxSize == null || _activePool.Count < _maxSize;
-    }
-
-    public T SpawnFromPool()
+    public TVal SpawnFromPool(TKey key)
     {
-        T instance = null;
+        TVal instance = null;
 
         // special logic for when max size reached
-        if (!CanSpawn()) {
-            if (_maxSizeReachedBehavior == ObjectPoolerMaxSizeReachedBehavior.CancelSpawn) {
-                return null;
-            } else {
-                return _activePool[0];
-            }
+        if (_activePool.ContainsKey(key))
+        {
+            Debug.LogWarning($"Key {key} was already in the pool");
+            return null;
         }
 
         // reuse disabled object if available
@@ -66,30 +34,31 @@ public class ObjectPooler<T> : MonoBehaviour where T: Component
             instance = _disabledPool.Dequeue();
         } else
         {
-            instance = Instantiate(_prefab, _parent).GetComponent<T>();
+            instance = GameObject.Instantiate(_prefab, _parent).GetComponent<TVal>();
         }
-        _activePool.Add(instance);
+        _activePool.Add(key, instance);
 
         return instance;
     }
 
-    public void ReturnToPool(T toDisable)
+    public void ReturnToPool(TKey toDisable)
     {
-        if (_activePool.Contains(toDisable))
+        if (_activePool.ContainsKey(toDisable))
         {
-            toDisable.gameObject.SetActive(false);
-            _activePool.Remove(toDisable);
-            _disabledPool.Enqueue(toDisable);
+            Debug.LogWarning($"Key {toDisable} was not spawned from this pool!");
         } else
         {
-            Debug.LogWarning("Object was not spawned from this pool!");
+            _activePool[toDisable].gameObject.SetActive(false);
+            _disabledPool.Enqueue(_activePool[toDisable]);
+            _activePool.Remove(toDisable);       
         }
     }
 
-    public void ClearPool() {
-        for (int i = _activePool.Count - 1 ; i >=0 ; i--)
+    public void ClearPool()
+    {
+        foreach (var key in _activePool.Keys)
         {
-            ReturnToPool(_activePool[i]);
+            ReturnToPool(key);
         }
     }
 }
