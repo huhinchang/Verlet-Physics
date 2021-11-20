@@ -114,6 +114,7 @@ public abstract class VerletSolver : MonoBehaviour
             if (Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd))
             {
                 _sticks.RemoveAt(i);
+                Debug.Log($"Attempting to remove key {i}");
                 _stickWidgetPooler.ReturnToPool(i);
             }
         }
@@ -181,6 +182,7 @@ public abstract class VerletSolver : MonoBehaviour
         }
         _sticks.Add(new Stick(a, b, Vector2.Distance(_points[a].Position, _points[b].Position)));
 
+        Debug.Log($"Attempting to add key {_sticks.Count - 1}");
         var stickWidgetInstance = _stickWidgetPooler.SpawnFromPool(_sticks.Count - 1);
         stickWidgetInstance.SetPosition(0, _points[a].Position);
         stickWidgetInstance.SetPosition(1, _points[b].Position);

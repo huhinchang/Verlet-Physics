@@ -45,12 +45,12 @@ public class ObjectPooler<TKey, TVal> where TVal : Component
     {
         if (_activePool.ContainsKey(toDisable))
         {
-            Debug.LogWarning($"Key {toDisable} was not spawned from this pool!");
-        } else
-        {
             _activePool[toDisable].gameObject.SetActive(false);
             _disabledPool.Enqueue(_activePool[toDisable]);
-            _activePool.Remove(toDisable);       
+            _activePool.Remove(toDisable);
+        } else
+        {
+            Debug.LogWarning($"Key {toDisable} was not spawned from this pool!");
         }
     }
 

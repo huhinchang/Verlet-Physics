@@ -1696,7 +1696,6 @@ MonoBehaviour:
   _descText: {fileID: 1697449944}
   _solvers:
   - {fileID: 519420033}
-  - {fileID: 519420030}
   _tools:
   - Button: {fileID: 1127031273}
     Tool: {fileID: 1808589088}
