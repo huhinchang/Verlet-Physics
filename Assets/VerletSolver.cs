@@ -53,6 +53,8 @@ public abstract class VerletSolver : MonoBehaviour
     [SerializeField]
     private Color _themeColor = default;
     [SerializeField]
+    private Color _cutPreviewColor = default;
+    [SerializeField]
     protected int _constraintReps = default;
 
     ObjectPooler<PointWidget> _pointWidgetPooler;
@@ -73,7 +75,8 @@ public abstract class VerletSolver : MonoBehaviour
         throw new NotImplementedException("Max Size Reached");
     }
 
-    public virtual void Solve() {
+    public virtual void Solve()
+    {
         UpdatePointWidgets();
         UpdateStickWidgets();
     }
@@ -102,7 +105,9 @@ public abstract class VerletSolver : MonoBehaviour
         for (int i = 0; i < _sticks.Count; i++)
         {
             var stick = _sticks[i];
-            widgets[i].UpdateState(_points[stick.A].Position, _points[stick.B].Position);
+            widgets[i].UpdateState(_points[stick.A].Position,
+            _points[stick.B].Position,
+            Utils.Math.Intersects(_points[stick.A].Position, _points[stick.B].Position, _knifeStart, _knifeEnd));
         }
     }
 
@@ -113,7 +118,7 @@ public abstract class VerletSolver : MonoBehaviour
         int newPointIndex = _points.Count - 1;
         LinkToSelected(newPointIndex, autoSelect: true);
 
-       _pointWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
+        _pointWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
         UpdatePointWidgets();
     }
 
@@ -136,6 +141,7 @@ public abstract class VerletSolver : MonoBehaviour
     {
         _knifeStart = start;
         _knifeEnd = end;
+        UpdateStickWidgets();
     }
 
     // Removes sticks that intersect the slice
@@ -217,7 +223,7 @@ public abstract class VerletSolver : MonoBehaviour
         }
         _sticks.Add(new Stick(a, b, Vector2.Distance(_points[a].Position, _points[b].Position)));
 
-        _stickWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
+        _stickWidgetPooler.SpawnFromPool().Initialize(_themeColor, _cutPreviewColor, gameObject.layer);
         UpdateStickWidgets();
     }
 
