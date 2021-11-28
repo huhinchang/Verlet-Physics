@@ -88,7 +88,7 @@ public abstract class VerletSolver : MonoBehaviour
         for (int i = 0; i < _points.Count; i++)
         {
             var point = _points[i];
-            widgets[i].UpdateState(point.Position);
+            widgets[i].UpdateState(point.Position, point.Locked.IsTrue());
         }
     }
 
@@ -128,6 +128,7 @@ public abstract class VerletSolver : MonoBehaviour
     {
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
         _points[closestPoint.Item3] = new Point(closestPoint.Item1.Position, locked ? 1 : 0);
+        UpdatePointWidgets();
     }
 
     // sets the start and end points of the knife

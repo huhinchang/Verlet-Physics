@@ -8,7 +8,7 @@ public class GpuVerletSolver : VerletSolver
     [SerializeField]
     private ComputeShader _verletShader = default;
 
-    public void Solve()
+    public override void Solve()
     {
         // ######################## gravity ############################
         var gravityKernel = _verletShader.FindKernel("ApplyGravity");
