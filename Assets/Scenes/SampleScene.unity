@@ -374,7 +374,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
-  _themeColor: {r: 0, g: 1, b: 0.9897845, a: 1}
+  _themeColor: {r: 0, g: 0.8310704, b: 1, a: 1}
+  _cutPreviewColor: {r: 0, g: 0.31460756, b: 0.4627451, a: 1}
   _constraintReps: 3
 --- !u!4 &210031356
 Transform:
@@ -1178,6 +1179,7 @@ MonoBehaviour:
   _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
   _themeColor: {r: 1, g: 0, b: 0.45679283, a: 1}
+  _cutPreviewColor: {r: 0.5471698, g: 0, b: 0.14770217, a: 1}
   _constraintReps: 8
   _verletShader: {fileID: 7200000, guid: 7f011ccd70e755944b6e49908f0fc839, type: 3}
 --- !u!4 &842113787

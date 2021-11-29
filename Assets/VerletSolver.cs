@@ -86,12 +86,12 @@ public abstract class VerletSolver : MonoBehaviour
         var widgets = _pointWidgetPooler.ActivePool;
         if (widgets.Count != _points.Count)
         {
-            Debug.LogError("point widgets count was different from actual stick count!");
+            Debug.LogError($"point widgets count ({widgets.Count}) was different from actual point count ({_points.Count})!");
         }
         for (int i = 0; i < _points.Count; i++)
         {
             var point = _points[i];
-            widgets[i].UpdateState(point.Position, point.Locked.IsTrue());
+            widgets[i].UpdateState(point.Position, point.Locked.IsTrue(), _selected == i);
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class VerletSolver : MonoBehaviour
         var widgets = _stickWidgetPooler.ActivePool;
         if (widgets.Count != _sticks.Count)
         {
-            Debug.LogError("stick widgets count was different from actual stick count!");
+            Debug.LogError($"stick widgets count ({widgets.Count}) was different from actual stick count ({_sticks.Count})!");
         }
         for (int i = 0; i < _sticks.Count; i++)
         {
@@ -115,17 +115,19 @@ public abstract class VerletSolver : MonoBehaviour
     public void CreatePointAtMouse(bool locked)
     {
         _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
-        int newPointIndex = _points.Count - 1;
-        LinkToSelected(newPointIndex, autoSelect: true);
-
         _pointWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
+
+        int newPointIndex = _points.Count - 1;
+        LinkToSelected(newPointIndex);
+        SelectPoint(newPointIndex);
+
         UpdatePointWidgets();
     }
 
     // sets the point closest to the mouse as selected
     public void SelectClosest()
     {
-        _selected = GetPointClosestToMouse(_points, point => point.Position).Item3;
+        SelectPoint(GetPointClosestToMouse(_points, point => point.Position).Item3);
     }
 
     // sets the lock status of the point closest to the mouse
@@ -165,7 +167,7 @@ public abstract class VerletSolver : MonoBehaviour
     public void LinkClosestToSelected()
     {
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
-        LinkToSelected(closestPoint.Item3, autoSelect: false);
+        LinkToSelected(closestPoint.Item3);
     }
 
     // Selects the point at the index
@@ -177,10 +179,11 @@ public abstract class VerletSolver : MonoBehaviour
             return;
         }
         _selected = index;
+        UpdatePointWidgets();
     }
 
     // Links the given point with the selected point
-    private void LinkToSelected(int index, bool autoSelect)
+    private void LinkToSelected(int index)
     {
         if (index >= _points.Count)
         {
@@ -191,11 +194,6 @@ public abstract class VerletSolver : MonoBehaviour
         if (_selected >= 0)
         {
             LinkPoints(_selected, index);
-        }
-
-        if (autoSelect)
-        {
-            SelectPoint(index);
         }
     }
 
