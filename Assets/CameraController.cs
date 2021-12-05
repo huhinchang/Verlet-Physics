@@ -7,8 +7,15 @@ using UnityEngine.Assertions;
 
 public class CameraController : MonoBehaviour
 {
+    [Header("UI References")]
     [SerializeField]
     Toggle _renderCpuAboveToggle = default;
+    [SerializeField]
+    Toggle _renderCpuToggle = default;
+    [SerializeField]
+    Toggle _renderGpuToggle = default;
+
+    [Header("Other References")]
     [SerializeField]
     UniversalAdditionalCameraData _camData = default;
     [SerializeField]
@@ -19,6 +26,8 @@ public class CameraController : MonoBehaviour
     private void OnValidate()
     {
         Assert.IsNotNull(_renderCpuAboveToggle);
+        Assert.IsNotNull(_renderCpuToggle);
+        Assert.IsNotNull(_renderGpuToggle);
         Assert.IsNotNull(_camData);
         Assert.IsNotNull(_cpuCam);
         Assert.IsNotNull(_gpuCam);
@@ -26,22 +35,43 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
+        _renderCpuAboveToggle.isOn = true;
+        _renderCpuToggle.isOn = true;
+        _renderGpuToggle.isOn = true;
+
         _renderCpuAboveToggle.onValueChanged.AddListener(FlipOrder);
+        _renderCpuToggle.onValueChanged.AddListener(ToggleCpu);
+        _renderGpuToggle.onValueChanged.AddListener(ToggleGpu);
     }
 
     private void OnDestroy()
     {
         _renderCpuAboveToggle.onValueChanged.RemoveListener(FlipOrder);
+        _renderCpuToggle.onValueChanged.RemoveListener(ToggleCpu);
+        _renderGpuToggle.onValueChanged.RemoveListener(ToggleGpu);
     }
 
-    public void FlipOrder(bool cpuAbove) {
+    public void FlipOrder(bool cpuAbove)
+    {
         _camData.cameraStack.Clear();
-        if (cpuAbove) {
+        if (cpuAbove)
+        {
             _camData.cameraStack.Add(_gpuCam);
             _camData.cameraStack.Add(_cpuCam);
-        } else {
+        } else
+        {
             _camData.cameraStack.Add(_cpuCam);
             _camData.cameraStack.Add(_gpuCam);
         }
+    }
+
+    public void ToggleCpu(bool value)
+    {
+        _cpuCam.enabled = value;
+    }
+
+    public void ToggleGpu(bool value)
+    {
+        _gpuCam.enabled = value;
     }
 }
