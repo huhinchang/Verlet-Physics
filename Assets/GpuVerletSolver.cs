@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class GpuVerletSolver : VerletSolver
+public class GpuVerletSolver : VerletSolverWrapper
 {
     [SerializeField]
     private ComputeShader _verletShader = default;
 
-    public override void Solve()
+    protected override void Solve()
     {
         // ######################## gravity ############################
         var gravityKernel = _verletShader.FindKernel("ApplyGravity");

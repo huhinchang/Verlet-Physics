@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils;
 
-public class CpuVerletSolver : VerletSolver {
-    public override void Solve() {
+public class CpuVerletSolver : VerletSolverWrapper {
+    protected override void Solve() {
         for (int i = 0; i < _points.Count; i++) {
             Point p = _points[i];
             if (p.Locked.IsFalse()) {

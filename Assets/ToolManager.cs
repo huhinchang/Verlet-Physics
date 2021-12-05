@@ -17,7 +17,7 @@ public class ToolManager : MonoBehaviour
     [SerializeField]
     private TMP_Text _descText = default;
     [SerializeField]
-    private List<VerletSolver> _solvers;
+    private List<VerletSolverWrapper> _solvers;
     [SerializeField]
     private MetaTool[] _tools = default;
 

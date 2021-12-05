@@ -19,9 +19,9 @@ public abstract class Tool : MonoBehaviour
     [SerializeField]
     private Tooltip[] _tooltips;
 
-    protected List<VerletSolver> _solvers;
+    protected List<VerletSolverWrapper> _solvers;
 
-    public void Setup(List<VerletSolver> solvers)
+    public void Setup(List<VerletSolverWrapper> solvers)
     {
         _solvers = solvers;
     }

@@ -75,13 +75,16 @@ public abstract class VerletSolver : MonoBehaviour
         throw new NotImplementedException("Max Size Reached");
     }
 
-    public virtual void Solve()
+    protected virtual void Solve()
     {
-        UpdatePointWidgets();
-        UpdateStickWidgets();
+        if (enabled)
+        {
+            UpdatePointWidgets();
+            UpdateStickWidgets();
+        }   
     }
 
-    private void UpdatePointWidgets()
+    protected void UpdatePointWidgets()
     {
         var widgets = _pointWidgetPooler.ActivePool;
         if (widgets.Count != _points.Count)
@@ -95,7 +98,7 @@ public abstract class VerletSolver : MonoBehaviour
         }
     }
 
-    private void UpdateStickWidgets()
+    protected void UpdateStickWidgets()
     {
         var widgets = _stickWidgetPooler.ActivePool;
         if (widgets.Count != _sticks.Count)
@@ -111,36 +114,17 @@ public abstract class VerletSolver : MonoBehaviour
         }
     }
 
-    // Creates a point at the mouse position
-    public void CreatePointAtMouse(bool locked)
+    protected void CreatePoint(Vector2 pos, bool locked)
     {
-        _points.Add(new Point(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1) ? 1 : 0));
+        _points.Add(new Point(pos, locked? 1 : 0));
         _pointWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
-
-        int newPointIndex = _points.Count - 1;
-        LinkToSelected(newPointIndex);
-        SelectPoint(newPointIndex);
-
-        UpdatePointWidgets();
-    }
-
-    // sets the point closest to the mouse as selected
-    public void SelectClosest()
-    {
-        SelectPoint(GetPointClosestToMouse(_points, point => point.Position).Item3);
-    }
-
-    // sets the lock status of the point closest to the mouse
-    public void LockClosest(bool locked)
-    {
-        var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
-        _points[closestPoint.Item3] = new Point(closestPoint.Item1.Position, locked ? 1 : 0);
-        UpdatePointWidgets();
     }
 
     // sets the start and end points of the knife
-    public void SetKnife(Vector2 start, Vector2 end)
+    public  void SetKnife(Vector2 start, Vector2 end)
     {
+        if (!enabled) return;
+
         _knifeStart = start;
         _knifeEnd = end;
         UpdateStickWidgets();
@@ -149,6 +133,8 @@ public abstract class VerletSolver : MonoBehaviour
     // Removes sticks that intersect the slice
     public void Cut()
     {
+        if (!enabled) return;
+
         for (int i = _sticks.Count - 1; i >= 0; i--)
         {
             Stick s = _sticks[i];
@@ -163,15 +149,8 @@ public abstract class VerletSolver : MonoBehaviour
         UpdateStickWidgets();
     }
 
-    // Links the point closest to the mouse with the selected point
-    public void LinkClosestToSelected()
-    {
-        var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
-        LinkToSelected(closestPoint.Item3);
-    }
-
     // Selects the point at the index
-    private void SelectPoint(int index)
+    protected void SelectPoint(int index)
     {
         if (index >= _points.Count)
         {
@@ -183,7 +162,7 @@ public abstract class VerletSolver : MonoBehaviour
     }
 
     // Links the given point with the selected point
-    private void LinkToSelected(int index)
+    protected void LinkToSelected(int index)
     {
         if (index >= _points.Count)
         {
@@ -197,7 +176,7 @@ public abstract class VerletSolver : MonoBehaviour
         }
     }
 
-    // Links 2 nodes
+    // Links 2 points
     private void LinkPoints(int a, int b)
     {
         if (a >= _points.Count)
@@ -240,27 +219,5 @@ public abstract class VerletSolver : MonoBehaviour
             Gizmos.color = Utils.Math.Intersects(aPosition, bPosition, _knifeStart, _knifeEnd) ? Color.black : _themeColor;
             Gizmos.DrawLine(_points[s.A].Position, _points[s.B].Position);
         }
-    }
-
-    // ############# UTILS ##############
-    private (T, float, int) GetPointClosestToMouse<T>(List<T> points, Func<T, Vector2> positionGetter)
-    {
-        var mousePos = Utils.Generic.GetMousePosition();
-
-        T closest = points[0];
-        float closestDist = float.MaxValue;
-        int closestIndex = 0;
-
-        for (int i = 0; i < points.Count; i++)
-        {
-            float dist = Vector2.Distance(positionGetter(points[i]), mousePos);
-            if (dist < closestDist)
-            {
-                closestDist = dist;
-                closest = points[i];
-                closestIndex = i;
-            }
-        }
-        return (closest, closestDist, closestIndex);
     }
 }
