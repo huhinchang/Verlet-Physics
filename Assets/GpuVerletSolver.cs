@@ -53,10 +53,4 @@ public class GpuVerletSolver : VerletSolverWrapper
 
         base.Solve();
     }
-
-    void Update()
-    {
-        if (Input.GetKey(KeyCode.Space))
-            Solve();
-    }
 }

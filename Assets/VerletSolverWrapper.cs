@@ -2,9 +2,40 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public abstract class VerletSolverWrapper : VerletSolver
 {
+    [Header("Wrapper")]
+    [SerializeField]
+    Color _nearestIndicatorColor = default;
+    [SerializeField]
+    private StickWidget _nearestIndicator = default;
+
+    private void OnValidate()
+    {
+        Assert.IsNotNull(_nearestIndicator);
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _nearestIndicator.Initialize(_nearestIndicatorColor, _nearestIndicatorColor, gameObject.layer);
+    }
+
+    protected override void Update()
+    {
+        if (_points.Count > 0)
+        {
+            _nearestIndicator.gameObject.SetActive(true);
+            _nearestIndicator.UpdateState(Utils.Generic.GetMousePosition(),
+                _points[GetPointClosestToMouse(_points, point => point.Position).Item3].Position,
+                false);
+        } else {
+            _nearestIndicator.gameObject.SetActive(false);
+        }
+    }
+
     // Creates a point at the mouse position
     public void CreatePointAtMouse(bool locked)
     {

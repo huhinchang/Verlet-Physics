@@ -64,7 +64,7 @@ public abstract class VerletSolver : MonoBehaviour
     private Vector2 _knifeStart, _knifeEnd;
     private int _selected = -1;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _pointWidgetPooler = new ObjectPooler<PointWidget>(_pointWidgetPrefab, parent: transform);
         _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: transform);
@@ -73,6 +73,12 @@ public abstract class VerletSolver : MonoBehaviour
     private void HandleMaxSizeReached()
     {
         throw new NotImplementedException("Max Size Reached");
+    }
+
+    protected virtual void Update()
+    {
+        if (Input.GetKey(KeyCode.Space))
+            Solve();
     }
 
     protected virtual void Solve()

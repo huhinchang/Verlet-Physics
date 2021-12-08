@@ -53,9 +53,4 @@ public class CpuVerletSolver : VerletSolverWrapper {
 
         base.Solve();
     }
-
-    void Update() {
-        if (Input.GetKey(KeyCode.Space))
-            Solve();
-    } 
 }

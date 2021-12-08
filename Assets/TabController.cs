@@ -20,6 +20,7 @@ public class TabController : MonoBehaviour {
 
     void Start() {
         Array.ForEach(_tabs, tab => tab.Button.onClick.AddListener(() => HandleTabChange(tab)));
+        Array.ForEach(_tabs, tab => tab.GameObject.SetActive(false));
         HandleTabChange(_tabs[0]);
     }
 
