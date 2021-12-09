@@ -553,7 +553,7 @@ MonoBehaviour:
   _themeColor: {r: 0, g: 0.8310704, b: 1, a: 1}
   _cutPreviewColor: {r: 0, g: 0.31460756, b: 0.4627451, a: 1}
   _constraintReps: 3
-  _nearestIndicatorColor: {r: 0, g: 0.8313726, b: 1, a: 1}
+  _nearestIndicatorColor: {r: 0, g: 0.8313726, b: 1, a: 0.29803923}
   _nearestIndicator: {fileID: 1991207342}
 --- !u!4 &210031356
 Transform:
@@ -1803,7 +1803,7 @@ MonoBehaviour:
   _themeColor: {r: 1, g: 0, b: 0.45679283, a: 1}
   _cutPreviewColor: {r: 0.5471698, g: 0, b: 0.14770217, a: 1}
   _constraintReps: 8
-  _nearestIndicatorColor: {r: 1, g: 0, b: 0.454902, a: 1}
+  _nearestIndicatorColor: {r: 1, g: 0, b: 0.454902, a: 0.29803923}
   _nearestIndicator: {fileID: 1370540074}
   _verletShader: {fileID: 7200000, guid: 7f011ccd70e755944b6e49908f0fc839, type: 3}
 --- !u!4 &842113787
@@ -1849,11 +1849,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b27f56de4a0204081a0dddcb0dafe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tooltips:
-  - Context: Default
-    Description: '[LMB] Unlock
+  _tooltip: '[LMB] Unlock nearest node
 
-      [RMB] Lock'
+    [RMB] Lock nearest node'
 --- !u!4 &859681931
 Transform:
   m_ObjectHideFlags: 0
@@ -4060,11 +4058,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0a40ebcfad61894b9717eaee40ebd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tooltips:
-  - Context: Default
-    Description: '[LMB] Place Node
+  _tooltip: '[LMB] Place unlocked node
 
-      [RMB] Place Locked Node'
+    [RMB] Place locked node'
 --- !u!1 &1814639031
 GameObject:
   m_ObjectHideFlags: 0
@@ -4108,9 +4104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523c45a268e5e324e872ecfe61d1e460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tooltips:
-  - Context: Default
-    Description: '[LMB Drag] Cut'
+  _tooltip: '[LMB drag] Cut lines'
 --- !u!1 &1859247168
 GameObject:
   m_ObjectHideFlags: 0
@@ -4563,13 +4557,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90f26f594dc88b142862d3a16b7d2998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tooltips:
-  - Context: Unselected
-    Description: '[LMB] Select node
+  _tooltip: '[LMB] Select node
 
-      [RMB] Link to selected'
-  - Context: Selected
-    Description: '[LMB] Choose second node'
+    [RMB] Connect nearest to selected'
 --- !u!4 &2003495883
 Transform:
   m_ObjectHideFlags: 0

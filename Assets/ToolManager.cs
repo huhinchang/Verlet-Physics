@@ -31,7 +31,6 @@ public class ToolManager : MonoBehaviour
             metaTool.Tool.Setup(_solvers);
             metaTool.Tool.gameObject.SetActive(false);
             metaTool.Button.onClick.AddListener(() => ChangeTool(metaTool));
-            metaTool.Tool.OnChangeTooltip += HandleShowTooltip;
         }
         ChangeTool(_tools[0]);
     }
@@ -41,7 +40,6 @@ public class ToolManager : MonoBehaviour
         foreach (var metaTool in _tools)
         {
             metaTool.Button.onClick.RemoveAllListeners();
-            metaTool.Tool.OnChangeTooltip -= HandleShowTooltip;
         }
     }
 
@@ -51,9 +49,6 @@ public class ToolManager : MonoBehaviour
 
         _currentTool = tool;
         _currentTool.Tool.Select();
-    }
-
-    private void HandleShowTooltip(string desc) {
-        _descText.text = desc;
+        _descText.text = _currentTool.Tool.Tooltip;
     }
 }

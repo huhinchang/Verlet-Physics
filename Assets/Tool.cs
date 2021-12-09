@@ -6,20 +6,12 @@ using UnityEngine;
 
 public abstract class Tool : MonoBehaviour
 {
-    public Action<string> OnChangeTooltip;
-
-    [System.Serializable]
-    class Tooltip
-    {
-        public string Context;
-        [TextArea(3, 5)]
-        public string Description;
-    }
-
-    [SerializeField]
-    private Tooltip[] _tooltips;
+    [SerializeField, TextArea(3,5)]
+    private string _tooltip = default;
 
     protected List<VerletSolverWrapper> _solvers;
+
+    public string Tooltip => _tooltip;
 
     public void Setup(List<VerletSolverWrapper> solvers)
     {
@@ -28,14 +20,9 @@ public abstract class Tool : MonoBehaviour
 
     public void Select() {
         gameObject.SetActive(true);
-        OnChangeTooltip?.Invoke(_tooltips[0].Description);
     }
 
     public void Deselect() {
         gameObject.SetActive(false);
-    }
-
-    protected void ShowTooltip(string context) {
-        OnChangeTooltip?.Invoke(_tooltips.First(t => t.Context == context).Description);
     }
 }
