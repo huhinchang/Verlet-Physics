@@ -27,7 +27,6 @@ public class ToolManager : MonoBehaviour
     {
         foreach (var metaTool in _tools)
         {
-            //_toolDictionary.Add(tool.Button, tool);
             metaTool.Tool.Setup(_solvers);
             metaTool.Tool.gameObject.SetActive(false);
             metaTool.Button.onClick.AddListener(() => ChangeTool(metaTool));
@@ -50,5 +49,6 @@ public class ToolManager : MonoBehaviour
         _currentTool = tool;
         _currentTool.Tool.Select();
         _descText.text = _currentTool.Tool.Tooltip;
+        _solvers.ForEach(s => s.ShowNearestIndicator = _currentTool.Tool.ShowNearestIndicator);
     }
 }

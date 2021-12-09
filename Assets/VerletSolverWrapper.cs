@@ -12,6 +12,14 @@ public abstract class VerletSolverWrapper : VerletSolver
     [SerializeField]
     private StickWidget _nearestIndicator = default;
 
+    private bool _showNearestIndicator = default;
+    public bool ShowNearestIndicator
+    {
+        set
+        {
+            _showNearestIndicator = value;
+        }
+    }
     private void OnValidate()
     {
         Assert.IsNotNull(_nearestIndicator);
@@ -27,7 +35,7 @@ public abstract class VerletSolverWrapper : VerletSolver
     {
         if (_points.Count > 0)
         {
-            _nearestIndicator.gameObject.SetActive(true);
+            _nearestIndicator.gameObject.SetActive(_showNearestIndicator);
             _nearestIndicator.UpdateState(Utils.Generic.GetMousePosition(),
                 _points[GetPointClosestToMouse(_points, point => point.Position).Item3].Position,
                 false);

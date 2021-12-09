@@ -6,11 +6,14 @@ using UnityEngine;
 
 public abstract class Tool : MonoBehaviour
 {
+    [SerializeField]
+    private bool _showNearestIndicator = default;
     [SerializeField, TextArea(3,5)]
     private string _tooltip = default;
-
+  
     protected List<VerletSolverWrapper> _solvers;
 
+    public bool ShowNearestIndicator => _showNearestIndicator;
     public string Tooltip => _tooltip;
 
     public void Setup(List<VerletSolverWrapper> solvers)
