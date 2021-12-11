@@ -9,26 +9,28 @@ public class StickWidget : MonoBehaviour
     LineRenderer _lineRenderer = default;
 
     private Color _baseColor;
-    private Color _cutPreviewColor;
 
     private void OnValidate()
     {
         Assert.IsNotNull(_lineRenderer);
     }
 
-    public void Initialize(Color baseColor, Color cutPreviewColor, int layer)
+    public void Initialize(Color baseColor, int layer)
     {
-        _baseColor = baseColor;
-        _cutPreviewColor = cutPreviewColor;
+        _lineRenderer.startColor = baseColor;
+        _lineRenderer.endColor = baseColor;
         gameObject.layer = layer;
     }
 
-    public void UpdateState(Vector2 a, Vector2 b, bool previewCut) {
+    public void UpdateState(Vector2 a, Vector2 b) {
         _lineRenderer.SetPosition(0, a);
         _lineRenderer.SetPosition(1, b);
+    }
 
-        var colorToShow = previewCut ? _cutPreviewColor : _baseColor;
-        _lineRenderer.startColor = colorToShow;
-        _lineRenderer.endColor = colorToShow;
+    public void UpdateState(Vector2 a, Vector2 b, Color color)
+    {
+        UpdateState(a, b);
+        _lineRenderer.startColor = color;
+        _lineRenderer.endColor = color;
     }
 }

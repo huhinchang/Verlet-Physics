@@ -114,9 +114,8 @@ public abstract class VerletSolver : MonoBehaviour
         for (int i = 0; i < _sticks.Count; i++)
         {
             var stick = _sticks[i];
-            widgets[i].UpdateState(_points[stick.A].Position,
-            _points[stick.B].Position,
-            Utils.Math.Intersects(_points[stick.A].Position, _points[stick.B].Position, _knifeStart, _knifeEnd));
+            var color = Utils.Math.Intersects(_points[stick.A].Position, _points[stick.B].Position, _knifeStart, _knifeEnd) ?  _cutPreviewColor : _themeColor;
+            widgets[i].UpdateState(_points[stick.A].Position, _points[stick.B].Position, color);
         }
     }
 
@@ -206,7 +205,7 @@ public abstract class VerletSolver : MonoBehaviour
         }
         _sticks.Add(new Stick(a, b, Vector2.Distance(_points[a].Position, _points[b].Position)));
 
-        _stickWidgetPooler.SpawnFromPool().Initialize(_themeColor, _cutPreviewColor, gameObject.layer);
+        _stickWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
         UpdateStickWidgets();
     }
 

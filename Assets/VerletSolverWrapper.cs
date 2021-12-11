@@ -28,17 +28,17 @@ public abstract class VerletSolverWrapper : VerletSolver
     protected override void Awake()
     {
         base.Awake();
-        _nearestIndicator.Initialize(_nearestIndicatorColor, _nearestIndicatorColor, gameObject.layer);
+        _nearestIndicator.Initialize(_nearestIndicatorColor, gameObject.layer);
     }
 
     protected override void Update()
     {
+        base.Update();
         if (_points.Count > 0)
         {
             _nearestIndicator.gameObject.SetActive(_showNearestIndicator);
             _nearestIndicator.UpdateState(Utils.Generic.GetMousePosition(),
-                _points[GetPointClosestToMouse(_points, point => point.Position).Item3].Position,
-                false);
+                _points[GetPointClosestToMouse(_points, point => point.Position).Item3].Position);
         } else {
             _nearestIndicator.gameObject.SetActive(false);
         }

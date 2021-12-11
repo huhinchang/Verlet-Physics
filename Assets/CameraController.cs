@@ -22,6 +22,8 @@ public class CameraController : MonoBehaviour
     Camera _cpuCam = default;
     [SerializeField]
     Camera _gpuCam = default;
+    [SerializeField]
+    Camera _toolsCam = default;
 
     private void OnValidate()
     {
@@ -31,6 +33,7 @@ public class CameraController : MonoBehaviour
         Assert.IsNotNull(_camData);
         Assert.IsNotNull(_cpuCam);
         Assert.IsNotNull(_gpuCam);
+        Assert.IsNotNull(_toolsCam);
     }
 
     private void Awake()
@@ -58,10 +61,12 @@ public class CameraController : MonoBehaviour
         {
             _camData.cameraStack.Add(_gpuCam);
             _camData.cameraStack.Add(_cpuCam);
+            _camData.cameraStack.Add(_toolsCam);
         } else
         {
             _camData.cameraStack.Add(_cpuCam);
             _camData.cameraStack.Add(_gpuCam);
+            _camData.cameraStack.Add(_toolsCam);
         }
     }
 
