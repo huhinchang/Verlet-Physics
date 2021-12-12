@@ -47,7 +47,7 @@ public abstract class VerletSolverWrapper : VerletSolver
     // Creates a point at the mouse position
     public void CreatePointAtMouse(bool locked)
     {
-        if (!enabled) return;
+        if (!isActiveAndEnabled) return;
 
         CreatePoint(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1));
 
@@ -58,17 +58,32 @@ public abstract class VerletSolverWrapper : VerletSolver
         UpdatePointWidgets();
     }
 
+    // erases the point closest to the mouse
+    public void EraseClosest() {
+        if (_points.Count < 1) return;
+
+        var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
+        if (_selected > closestPoint.Item3) {
+            --_selected;
+        }
+        ErasePoint(closestPoint.Item3);
+    }
+
     // sets the point closest to the mouse as selected
     public void SelectClosest()
     {
-        if (!enabled) return;
+        if (!isActiveAndEnabled) return;
+        if (_points.Count < 1) return;
+
         SelectPoint(GetPointClosestToMouse(_points, point => point.Position).Item3);
     }
 
     // sets the lock status of the point closest to the mouse
     public void LockClosest(bool locked)
     {
-        if (!enabled) return;
+        if (!isActiveAndEnabled) return;
+        if (_points.Count < 1) return;
+
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
         _points[closestPoint.Item3] = new Point(closestPoint.Item1.Position, locked ? 1 : 0);
         UpdatePointWidgets();
@@ -77,7 +92,9 @@ public abstract class VerletSolverWrapper : VerletSolver
     // Links the point closest to the mouse with the selected point
     public void LinkClosestToSelected()
     {
-        if (!enabled) return;
+        if (!isActiveAndEnabled) return;
+        if (_points.Count < 1) return;
+
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
         LinkToSelected(closestPoint.Item3);
     }

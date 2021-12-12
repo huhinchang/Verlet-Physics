@@ -62,7 +62,7 @@ public abstract class VerletSolver : MonoBehaviour
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
     private Vector2 _knifeStart, _knifeEnd;
-    private int _selected = -1;
+    protected int _selected = -1;
 
     protected virtual void Awake()
     {
@@ -87,7 +87,7 @@ public abstract class VerletSolver : MonoBehaviour
         {
             UpdatePointWidgets();
             UpdateStickWidgets();
-        }   
+        }
     }
 
     protected void UpdatePointWidgets()
@@ -114,19 +114,56 @@ public abstract class VerletSolver : MonoBehaviour
         for (int i = 0; i < _sticks.Count; i++)
         {
             var stick = _sticks[i];
-            var color = Utils.Math.Intersects(_points[stick.A].Position, _points[stick.B].Position, _knifeStart, _knifeEnd) ?  _cutPreviewColor : _themeColor;
+            var color = Utils.Math.Intersects(_points[stick.A].Position, _points[stick.B].Position, _knifeStart, _knifeEnd) ? _cutPreviewColor : _themeColor;
             widgets[i].UpdateState(_points[stick.A].Position, _points[stick.B].Position, color);
         }
     }
 
     protected void CreatePoint(Vector2 pos, bool locked)
     {
-        _points.Add(new Point(pos, locked? 1 : 0));
+        _points.Add(new Point(pos, locked ? 1 : 0));
         _pointWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
     }
 
+    protected void ErasePoint(int indexToRemove)
+    {
+        _points.RemoveAt(indexToRemove);
+        _pointWidgetPooler.ReturnToPoolAt(0);
+
+        // special logic for sticks
+        for (int i = _sticks.Count - 1; i >= 0; i--)
+        {
+            Stick s = _sticks[i];
+            if (s.A == indexToRemove || s.B == indexToRemove)
+            {
+                // stick contains deleted point
+                _sticks.RemoveAt(i);
+                _stickWidgetPooler.ReturnToPoolAt(0);
+            } else
+            {
+                // weird stuff because we're working with structs not classes
+                if (s.A > indexToRemove && s.B > indexToRemove)
+                {
+                    _sticks.RemoveAt(i);
+                    _sticks.Insert(i, new Stick(s.A - 1, s.B - 1, s.Length));
+                } else if (s.A > indexToRemove)
+                {
+                    _sticks.RemoveAt(i);
+                    _sticks.Insert(i, new Stick(s.A - 1, s.B, s.Length));
+                } else if (s.B > indexToRemove)
+                {
+                    _sticks.RemoveAt(i);
+                    _sticks.Insert(i, new Stick(s.A, s.B - 1, s.Length));
+                }
+            }
+        }
+
+        UpdatePointWidgets();
+        UpdateStickWidgets();
+    }
+
     // sets the start and end points of the knife
-    public  void SetKnife(Vector2 start, Vector2 end)
+    public void SetKnife(Vector2 start, Vector2 end)
     {
         if (!enabled) return;
 
