@@ -183,7 +183,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0, b: 0, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -206,10 +206,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 704149203}
   m_HandleRect: {fileID: 959528112}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0
+  m_MinValue: 1
+  m_MaxValue: 10
+  m_WholeNumbers: 1
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -552,6 +552,7 @@ MonoBehaviour:
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
   _themeColor: {r: 0, g: 0.8310704, b: 1, a: 1}
   _cutPreviewColor: {r: 0, g: 0.31460756, b: 0.4627451, a: 1}
+  _constraintRepsSlider: {fileID: 47879667}
   _constraintReps: 3
   _nearestIndicatorColor: {r: 0, g: 0.8313726, b: 1, a: 0.29803923}
   _nearestIndicator: {fileID: 1991207342}
@@ -1923,6 +1924,7 @@ MonoBehaviour:
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
   _themeColor: {r: 1, g: 0, b: 0.45679283, a: 1}
   _cutPreviewColor: {r: 0.5471698, g: 0, b: 0.14770217, a: 1}
+  _constraintRepsSlider: {fileID: 1299994463}
   _constraintReps: 8
   _nearestIndicatorColor: {r: 1, g: 0, b: 0.454902, a: 0.29803923}
   _nearestIndicator: {fileID: 1370540074}
@@ -3031,7 +3033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54bd505b7cf07b4cb5718d028973377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showNearestIndicator: 0
+  _showNearestIndicator: 1
   _tooltip: '[LMB] Erase closest node'
 --- !u!4 &1226383503
 Transform:
@@ -3179,7 +3181,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0, b: 0, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -3202,10 +3204,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1495800714}
   m_HandleRect: {fileID: 476615623}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0
+  m_MinValue: 1
+  m_MaxValue: 10
+  m_WholeNumbers: 1
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4397,7 +4399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0a40ebcfad61894b9717eaee40ebd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showNearestIndicator: 1
+  _showNearestIndicator: 0
   _tooltip: '[LMB] Place node
 
     [RMB] Place locked node'

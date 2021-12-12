@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Utils;
 
 public abstract class VerletSolver : MonoBehaviour
@@ -55,6 +56,8 @@ public abstract class VerletSolver : MonoBehaviour
     [SerializeField]
     private Color _cutPreviewColor = default;
     [SerializeField]
+    private Slider _constraintRepsSlider = default;
+    [SerializeField]
     protected int _constraintReps = default;
 
     ObjectPooler<PointWidget> _pointWidgetPooler;
@@ -68,6 +71,13 @@ public abstract class VerletSolver : MonoBehaviour
     {
         _pointWidgetPooler = new ObjectPooler<PointWidget>(_pointWidgetPrefab, parent: transform);
         _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: transform);
+        _constraintRepsSlider.value = _constraintReps;
+        _constraintRepsSlider.onValueChanged.AddListener((value) => _constraintReps = (int) value);
+    }
+
+    private void OnDestroy()
+    {
+        _constraintRepsSlider.onValueChanged.RemoveAllListeners();
     }
 
     private void HandleMaxSizeReached()
