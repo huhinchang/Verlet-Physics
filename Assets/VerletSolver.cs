@@ -60,11 +60,13 @@ public abstract class VerletSolver : MonoBehaviour
     [SerializeField]
     protected int _constraintReps = default;
 
-    ObjectPooler<PointWidget> _pointWidgetPooler;
-    ObjectPooler<StickWidget> _stickWidgetPooler;
+    private ObjectPooler<PointWidget> _pointWidgetPooler;
+    private ObjectPooler<StickWidget> _stickWidgetPooler;
+    private Vector2 _knifeStart, _knifeEnd;
+    private bool _knifeActive = false;
+
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
-    private Vector2 _knifeStart, _knifeEnd;
     protected int _selected = -1;
 
     protected virtual void Awake()
@@ -124,7 +126,7 @@ public abstract class VerletSolver : MonoBehaviour
         for (int i = 0; i < _sticks.Count; i++)
         {
             var stick = _sticks[i];
-            var color = Utils.Math.Intersects(_points[stick.A].Position, _points[stick.B].Position, _knifeStart, _knifeEnd) ? _cutPreviewColor : _themeColor;
+            var color = _knifeActive && Utils.Math.Intersects(_points[stick.A].Position, _points[stick.B].Position, _knifeStart, _knifeEnd) ? _cutPreviewColor : _themeColor;
             widgets[i].UpdateState(_points[stick.A].Position, _points[stick.B].Position, color);
         }
     }
@@ -180,6 +182,13 @@ public abstract class VerletSolver : MonoBehaviour
         _knifeStart = start;
         _knifeEnd = end;
         UpdateStickWidgets();
+    }
+
+    // sets the start and end points of the knife
+    public void SetKnifeActive(bool active)
+    {
+        if (!enabled) return;
+        _knifeActive = active;
     }
 
     // Removes sticks that intersect the slice

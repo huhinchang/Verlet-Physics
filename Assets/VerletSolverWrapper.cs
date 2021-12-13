@@ -12,7 +12,8 @@ public abstract class VerletSolverWrapper : VerletSolver
     [SerializeField]
     private StickWidget _nearestIndicator = default;
 
-    private bool _showNearestIndicator = default;
+    private bool _showNearestIndicator = false;
+
     public bool ShowNearestIndicator
     {
         set

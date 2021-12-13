@@ -14,6 +14,7 @@ public class KnifeTool : Tool
     private void Awake()
     {
         _knifeIndicator.Initialize(_knifeColor, gameObject.layer);
+        _knifeIndicator.gameObject.SetActive(false);
     }
 
     void Update()
@@ -27,6 +28,7 @@ public class KnifeTool : Tool
                 _knifeIndicator.gameObject.SetActive(true);
 
                 _solvers.ForEach(v => v.SetKnife(_start, _end));
+                _solvers.ForEach(v => v.SetKnifeActive(true));
             }
             if (Input.GetMouseButton(0))
             {
@@ -39,6 +41,7 @@ public class KnifeTool : Tool
             {
                 _knifeIndicator.gameObject.SetActive(false);
                 _solvers.ForEach(v => v.Cut());
+                _solvers.ForEach(v => v.SetKnifeActive(false));
             }
         }
     }
