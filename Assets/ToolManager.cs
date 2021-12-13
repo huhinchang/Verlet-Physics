@@ -10,7 +10,7 @@ public class ToolManager : MonoBehaviour
     [System.Serializable]
     class MetaTool
     {
-        public Button Button;
+        public Toggle Toggle;
         public Tool Tool;
     }
 
@@ -29,7 +29,7 @@ public class ToolManager : MonoBehaviour
         {
             metaTool.Tool.Setup(_solvers);
             metaTool.Tool.gameObject.SetActive(false);
-            metaTool.Button.onClick.AddListener(() => ChangeTool(metaTool));
+            metaTool.Toggle.onValueChanged.AddListener((value) => ToggleTool(metaTool, value));
         }
         ChangeTool(_tools[0]);
     }
@@ -38,8 +38,21 @@ public class ToolManager : MonoBehaviour
     {
         foreach (var metaTool in _tools)
         {
-            metaTool.Button.onClick.RemoveAllListeners();
+            metaTool.Toggle.onValueChanged.RemoveAllListeners();
         }
+    }
+
+    private void ToggleTool(MetaTool tool, bool isOn)
+    {
+        if (isOn)
+        {
+            tool.Tool.Select();
+            _descText.text = tool.Tool.Tooltip;
+            _solvers.ForEach(s => s.ShowNearestIndicator = tool.Tool.ShowNearestIndicator);
+        } else {            
+            tool.Tool.Deselect();
+        }
+
     }
 
     private void ChangeTool(MetaTool tool)
