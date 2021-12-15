@@ -1,0 +1,25 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel ApplyGravity
+
+struct Point
+{
+	float2 Position, PrevPosition;
+	int Locked;
+};
+
+RWStructuredBuffer<Point> Points;
+uint PointsLength;
+float DeltaTime;
+float2 Gravity;
+
+[numthreads(1,1,1)]
+void ApplyGravity (uint3 id : SV_DispatchThreadID)
+{
+	Point p = Points[id.x];
+	float2 oldPos = p.Position;
+	p.Position += (p.Position - p.PrevPosition) * (1 - p.Locked);
+	p.Position += Gravity * DeltaTime * DeltaTime * (1 - p.Locked);
+	p.PrevPosition = oldPos;
+
+	Points[id.x] = p;
+}

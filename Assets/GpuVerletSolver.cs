@@ -6,36 +6,38 @@ using System.Linq;
 public class GpuVerletSolver : VerletSolverWrapper
 {
     [SerializeField]
-    private ComputeShader _verletShader = default;
+    private ComputeShader _gravityShader = default;
+    [SerializeField]
+    private ComputeShader _constraintShader = default;
 
     protected override void Solve()
     {
         // ######################## gravity ############################
-        var gravityKernel = _verletShader.FindKernel("ApplyGravity");
+        var gravityKernel = _gravityShader.FindKernel("ApplyGravity");
 
-        _verletShader.SetFloat("DeltaTime", Time.deltaTime);
-        _verletShader.SetFloats("Gravity", _kGravity.x, _kGravity.y);
-        _verletShader.SetInt("PointsLength", _points.Count);
-        _verletShader.SetInt("SticksLength", _sticks.Count);
+        _gravityShader.SetFloat("DeltaTime", Time.deltaTime);
+        _gravityShader.SetFloats("Gravity", _kGravity.x, _kGravity.y);
+        _gravityShader.SetInt("PointsLength", _points.Count);
 
         ComputeBuffer pointsBuffer = new ComputeBuffer(_points.Count, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Point)));
         pointsBuffer.SetData(_points);
-        _verletShader.SetBuffer(gravityKernel, "Points", pointsBuffer);
+        _gravityShader.SetBuffer(gravityKernel, "Points", pointsBuffer);
 
-        _verletShader.Dispatch(gravityKernel, _points.Count, 1, 1);
+        _gravityShader.Dispatch(gravityKernel, _points.Count, 1, 1);
 
         // ######################## constraints ############################
-        var constraintsKernel = _verletShader.FindKernel("Constraints");
+        var constraintsKernel = _constraintShader.FindKernel("Constraints");
 
-        _verletShader.SetBuffer(constraintsKernel, "Points", pointsBuffer);
+        _constraintShader.SetBuffer(constraintsKernel, "Points", pointsBuffer);
+        _constraintShader.SetInt("SticksLength", _sticks.Count);
 
         ComputeBuffer sticksBuffer = new ComputeBuffer(_sticks.Count, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Stick)));
         sticksBuffer.SetData(_sticks);
-        _verletShader.SetBuffer(constraintsKernel, "Sticks", sticksBuffer);
+        _constraintShader.SetBuffer(constraintsKernel, "Sticks", sticksBuffer);
 
         for (int i = 0; i < _constraintReps; i++)
         {
-            _verletShader.Dispatch(constraintsKernel, _points.Count, 1, 1);
+            _constraintShader.Dispatch(constraintsKernel, _points.Count, 1, 1);
         }
 
         {

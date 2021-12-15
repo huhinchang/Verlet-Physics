@@ -40,7 +40,8 @@ public abstract class VerletSolverWrapper : VerletSolver
             _nearestIndicator.gameObject.SetActive(_showNearestIndicator);
             _nearestIndicator.UpdateState(Utils.Generic.GetMousePosition(),
                 _points[GetPointClosestToMouse(_points, point => point.Position).Item3].Position);
-        } else {
+        } else
+        {
             _nearestIndicator.gameObject.SetActive(false);
         }
     }
@@ -50,23 +51,22 @@ public abstract class VerletSolverWrapper : VerletSolver
     {
         if (!isActiveAndEnabled) return;
 
-        CreatePoint(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1));
+        if (CreatePoint(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1)))
+        {
+            int newPointIndex = _points.Count - 1;
+            LinkToSelected(newPointIndex);
+            SelectPoint(newPointIndex);
 
-        int newPointIndex = _points.Count - 1;
-        LinkToSelected(newPointIndex);
-        SelectPoint(newPointIndex);
-
-        UpdatePointWidgets();
+            UpdatePointWidgets();
+        }
     }
 
     // erases the point closest to the mouse
-    public void EraseClosest() {
+    public void EraseClosest()
+    {
         if (_points.Count < 1) return;
 
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
-        if (_selected > closestPoint.Item3) {
-            --_selected;
-        }
         ErasePoint(closestPoint.Item3);
     }
 

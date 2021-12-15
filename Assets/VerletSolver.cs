@@ -74,7 +74,7 @@ public abstract class VerletSolver : MonoBehaviour
         _pointWidgetPooler = new ObjectPooler<PointWidget>(_pointWidgetPrefab, parent: transform);
         _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: transform);
         _constraintRepsSlider.value = _constraintReps;
-        _constraintRepsSlider.onValueChanged.AddListener((value) => _constraintReps = (int) value);
+        _constraintRepsSlider.onValueChanged.AddListener((value) => _constraintReps = (int)value);
     }
 
     private void OnDestroy()
@@ -89,7 +89,7 @@ public abstract class VerletSolver : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) || Input.GetKeyDown(KeyCode.LeftShift))
             Solve();
     }
 
@@ -131,10 +131,27 @@ public abstract class VerletSolver : MonoBehaviour
         }
     }
 
-    protected void CreatePoint(Vector2 pos, bool locked)
+    // returns if a new point was indeed created
+    protected bool CreatePoint(Vector2 pos, bool locked)
     {
+        for (int i = 0; i < _points.Count; i++)
+        {
+            if (_points[i].Position == pos)
+            {
+                Debug.Log("Point with same position found");
+                if (locked != _points[i].Locked.IsTrue())
+                {
+                    Point p = _points[i];
+                    p.Locked = locked ? 1 : 0;
+                    _points[i] = p;
+                }
+                return false;
+            }
+        }
+
         _points.Add(new Point(pos, locked ? 1 : 0));
         _pointWidgetPooler.SpawnFromPool().Initialize(_themeColor, gameObject.layer);
+        return true;
     }
 
     protected void ErasePoint(int indexToRemove)
@@ -154,20 +171,20 @@ public abstract class VerletSolver : MonoBehaviour
             } else
             {
                 // weird stuff because we're working with structs not classes
-                if (s.A > indexToRemove && s.B > indexToRemove)
-                {
-                    _sticks.RemoveAt(i);
-                    _sticks.Insert(i, new Stick(s.A - 1, s.B - 1, s.Length));
-                } else if (s.A > indexToRemove)
-                {
-                    _sticks.RemoveAt(i);
-                    _sticks.Insert(i, new Stick(s.A - 1, s.B, s.Length));
-                } else if (s.B > indexToRemove)
-                {
-                    _sticks.RemoveAt(i);
-                    _sticks.Insert(i, new Stick(s.A, s.B - 1, s.Length));
-                }
+                int aIndexShift = s.A > indexToRemove ? -1 : 0;
+                int bIndexShift = s.B > indexToRemove ? -1 : 0;
+
+                _sticks[i] = new Stick(s.A + aIndexShift, s.B + bIndexShift, s.Length);
             }
+        }
+
+        // shift selected point
+        if (_selected > indexToRemove)
+        {
+            --_selected;
+        } else if (_selected == indexToRemove)
+        {
+            _selected = -1;
         }
 
         UpdatePointWidgets();

@@ -1,0 +1,42 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Constraints
+
+struct Point
+{
+	float2 Position, PrevPosition;
+	int Locked;
+};
+struct Stick
+{
+	uint A, B;
+	float Length;
+};
+
+RWStructuredBuffer<Point> Points;
+RWStructuredBuffer<Stick> Sticks;
+int SticksLength;
+
+[numthreads(1,1,1)]
+void Constraints (uint3 id : SV_DispatchThreadID)
+{
+	Point p = Points[id.x];
+	if (p.Locked == 1) return;
+
+	for (int i = 0; i < SticksLength; i++) {
+		if (Sticks[i].A == id.x || Sticks[i].B == id.x) {
+			float actualLength = distance(Points[Sticks[i].A].Position, Points[Sticks[i].B].Position);
+			float lengthDelta = Sticks[i].Length - actualLength;
+			float2 stickDir = normalize(Points[Sticks[i].A].Position - Points[Sticks[i].B].Position);
+		
+			if (Sticks[i].A == id.x)
+			{
+				p.Position += stickDir * lengthDelta / 2;
+			}
+			if (Sticks[i].B == id.x)
+			{
+				p.Position -= stickDir * lengthDelta / 2;
+			}
+		}
+	}
+	Points[id.x] = p;
+}

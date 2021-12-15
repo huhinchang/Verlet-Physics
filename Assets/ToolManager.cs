@@ -49,7 +49,8 @@ public class ToolManager : MonoBehaviour
             tool.Tool.Select();
             _descText.text = tool.Tool.Tooltip;
             _solvers.ForEach(s => s.ShowNearestIndicator = tool.Tool.ShowNearestIndicator);
-        } else {            
+        } else
+        {
             tool.Tool.Deselect();
         }
 

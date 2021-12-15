@@ -1421,10 +1421,6 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
-    - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
-      propertyPath: m_fontSize
-      value: 26.15
-      objectReference: {fileID: 0}
     - target: {fileID: 5936345629488162545, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1916,7 +1912,8 @@ MonoBehaviour:
   _constraintReps: 8
   _nearestIndicatorColor: {r: 1, g: 0, b: 0.454902, a: 0.29803923}
   _nearestIndicator: {fileID: 1370540074}
-  _verletShader: {fileID: 7200000, guid: 7f011ccd70e755944b6e49908f0fc839, type: 3}
+  _gravityShader: {fileID: 7200000, guid: 3372de55be910b2428df0a0e97710577, type: 3}
+  _constraintShader: {fileID: 7200000, guid: 7f011ccd70e755944b6e49908f0fc839, type: 3}
 --- !u!4 &842113787
 Transform:
   m_ObjectHideFlags: 0
@@ -2291,10 +2288,6 @@ PrefabInstance:
       propertyPath: m_text
       value: Erase
       objectReference: {fileID: 0}
-    - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
-      propertyPath: m_fontSize
-      value: 22.9
-      objectReference: {fileID: 0}
     - target: {fileID: 5936345629488162545, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2652,10 +2645,6 @@ PrefabInstance:
     - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_text
       value: Link
-      objectReference: {fileID: 0}
-    - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
-      propertyPath: m_fontSize
-      value: 32.45
       objectReference: {fileID: 0}
     - target: {fileID: 5936345629488162545, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_Pivot.x
@@ -4848,10 +4837,6 @@ PrefabInstance:
     - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_text
       value: Place
-      objectReference: {fileID: 0}
-    - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
-      propertyPath: m_fontSize
-      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 5936345629488162545, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_Pivot.x
