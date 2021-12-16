@@ -21,8 +21,6 @@ public class ToolManager : MonoBehaviour
     [SerializeField]
     private MetaTool[] _tools = default;
 
-    private MetaTool _currentTool = default;
-
     void Start()
     {
         foreach (var metaTool in _tools)
@@ -31,7 +29,10 @@ public class ToolManager : MonoBehaviour
             metaTool.Tool.gameObject.SetActive(false);
             metaTool.Toggle.onValueChanged.AddListener((value) => ToggleTool(metaTool, value));
         }
-        ChangeTool(_tools[0]);
+        _tools[0].Tool.Select();
+        _tools[0].Toggle.isOn = true;
+        _descText.text = _tools[0].Tool.Tooltip;
+        _solvers.ForEach(s => s.ShowNearestIndicator = _tools[0].Tool.ShowNearestIndicator);
     }
 
     private void OnDestroy()
@@ -54,15 +55,5 @@ public class ToolManager : MonoBehaviour
             tool.Tool.Deselect();
         }
 
-    }
-
-    private void ChangeTool(MetaTool tool)
-    {
-        _currentTool?.Tool.Deselect();
-
-        _currentTool = tool;
-        _currentTool.Tool.Select();
-        _descText.text = _currentTool.Tool.Tooltip;
-        _solvers.ForEach(s => s.ShowNearestIndicator = _currentTool.Tool.ShowNearestIndicator);
     }
 }
