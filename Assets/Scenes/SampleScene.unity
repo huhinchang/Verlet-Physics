@@ -779,6 +779,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
+      propertyPath: m_text
+      value: Show GPU
+      objectReference: {fileID: 0}
+    - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_margin.w
       value: 0
       objectReference: {fileID: 0}
@@ -1192,7 +1196,6 @@ GameObject:
   m_Component:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
-  - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   m_Layer: 6
   m_Name: CPU Camera
@@ -1201,14 +1204,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &519420029
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
 --- !u!114 &519420030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1299,7 +1294,7 @@ Transform:
   - {fileID: 210031356}
   - {fileID: 1991207344}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &562315447
 PrefabInstance:
@@ -1355,6 +1350,10 @@ PrefabInstance:
     - target: {fileID: 3961375003978684010, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
+      propertyPath: m_text
+      value: Render CPU above
       objectReference: {fileID: 0}
     - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_margin.w
@@ -2357,6 +2356,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1138644602}
+  - component: {fileID: 1138644604}
   - component: {fileID: 1138644601}
   - component: {fileID: 1138644600}
   - component: {fileID: 1138644603}
@@ -2433,13 +2433,13 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 33
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -2457,7 +2457,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1138644603
 MonoBehaviour:
@@ -2478,6 +2478,14 @@ MonoBehaviour:
   _cpuCam: {fileID: 519420031}
   _gpuCam: {fileID: 1791424673}
   _toolsCam: {fileID: 1445071870}
+--- !u!81 &1138644604
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138644599}
+  m_Enabled: 1
 --- !u!1 &1145259790
 GameObject:
   m_ObjectHideFlags: 0
@@ -3109,7 +3117,7 @@ Transform:
   - {fileID: 1814639032}
   - {fileID: 2003495883}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1445071869
 MonoBehaviour:
@@ -3169,13 +3177,13 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 257
+    m_Bits: 256
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 0
@@ -3729,7 +3737,7 @@ Transform:
   - {fileID: 842113787}
   - {fileID: 1370540076}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1791424671
 MonoBehaviour:
@@ -4099,6 +4107,10 @@ PrefabInstance:
     - target: {fileID: 3961375003978684010, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
+      propertyPath: m_text
+      value: Show CPU
       objectReference: {fileID: 0}
     - target: {fileID: 5936345628520724012, guid: 9b8a26d5eff45984a8ed57e1bfb16768, type: 3}
       propertyPath: m_margin.w

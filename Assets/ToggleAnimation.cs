@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Assertions;
 
-public class ToggleAnimation : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler, IDragHandler
+public class ToggleAnimation : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
     private const string _kPointerEnter = "PointerEnter";
     private const string _kPointerClick = "PointerClick";
@@ -31,6 +31,7 @@ public class ToggleAnimation : MonoBehaviour, IPointerEnterHandler, IPointerClic
     private void OnEnable()
     {
         _toggle.onValueChanged.AddListener(HandleToggleValueChanged);
+        _anim.SetBool(_kIsToggleOnHash, _toggle.isOn);
     }
 
     private void HandleToggleValueChanged(bool isOn) {
@@ -44,24 +45,22 @@ public class ToggleAnimation : MonoBehaviour, IPointerEnterHandler, IPointerClic
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        _anim.SetTrigger(_kPointerClickHash);
+        StartCoroutine(SetTriggerInstant(_kPointerClickHash));
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        _anim.SetTrigger(_kPointerEnterHash);
-        
-        Debug.Log($"{eventData.pointerEnter.gameObject.name} AAAAA");
-        Debug.Log($"{gameObject.name} OnPointerEnter");
+        StartCoroutine(SetTriggerInstant(_kPointerEnterHash));
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        _anim.SetTrigger(_kPointerExitHash);
+        StartCoroutine(SetTriggerInstant(_kPointerExitHash));
     }
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        //throw new System.NotImplementedException();
+    IEnumerator SetTriggerInstant(int hash) {
+        _anim.SetTrigger(hash);
+        yield return new WaitForEndOfFrame();
+        _anim.ResetTrigger(hash);
     }
 }
