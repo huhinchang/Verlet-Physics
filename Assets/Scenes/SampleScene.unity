@@ -547,6 +547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a607bb84577634fac7f860a5764b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _solveButton: {fileID: 3370073204262303022}
   _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
   _themeColor: {r: 0, g: 0.8310704, b: 1, a: 1}
@@ -616,8 +617,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -225.0497}
-  m_SizeDelta: {x: 250, y: 450.0994}
+  m_AnchoredPosition: {x: 0, y: -224.88889}
+  m_SizeDelta: {x: 250, y: 449.77777}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &289809102
 CanvasRenderer:
@@ -1153,6 +1154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4431ca8788d89ca4280f94bf574d25b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _solveButton: {fileID: 3370073204262303022}
   _pointWidgetPrefab: {fileID: 8795791756108320515, guid: 0623eb6b865702e4a8651cf118e1e47c, type: 3}
   _stickWidgetPrefab: {fileID: 7999948457767670936, guid: 22df44183173c64479db6f3617a438e7, type: 3}
   _themeColor: {r: 1, g: 0, b: 0.45679283, a: 1}
@@ -1592,8 +1594,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -225.0497}
-  m_SizeDelta: {x: 250, y: 450.0994}
+  m_AnchoredPosition: {x: 0, y: -224.88889}
+  m_SizeDelta: {x: 250, y: 449.77777}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1145259793
 CanvasRenderer:
@@ -3791,13 +3793,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8982083508432982813, guid: 7622017627775cf4b87dd928077f79d5, type: 3}
       propertyPath: m_Name
-      value: Held
+      value: Solve
       objectReference: {fileID: 0}
     - target: {fileID: 8982083509547221967, guid: 7622017627775cf4b87dd928077f79d5, type: 3}
       propertyPath: m_text
-      value: '[SPACE]
-
-        Simulate'
+      value: Simulate
       objectReference: {fileID: 0}
     - target: {fileID: 8982083509547221967, guid: 7622017627775cf4b87dd928077f79d5, type: 3}
       propertyPath: m_fontSize

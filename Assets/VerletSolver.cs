@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 using Utils;
 
@@ -48,6 +49,8 @@ public abstract class VerletSolver : MonoBehaviour
     private const float _kDebugLargeRadius = 0.2f;
 
     [SerializeField]
+    private HeldButton _solveButton = default;
+    [SerializeField]
     private GameObject _pointWidgetPrefab = default;
     [SerializeField]
     private GameObject _stickWidgetPrefab = default;
@@ -64,22 +67,35 @@ public abstract class VerletSolver : MonoBehaviour
     private ObjectPooler<StickWidget> _stickWidgetPooler;
     private Vector2 _knifeStart, _knifeEnd;
     private bool _knifeActive = false;
+    private bool _solveButtonPressed = false;
 
     protected List<Point> _points = new List<Point>();
     protected List<Stick> _sticks = new List<Stick>();
     protected int _selected = -1;
 
+    private void OnValidate()
+    {
+        Assert.IsNotNull(_solveButton);
+        Assert.IsNotNull(_pointWidgetPrefab);
+        Assert.IsNotNull(_stickWidgetPrefab);
+        Assert.IsNotNull(_constraintRepsSlider);
+    }
+
     protected virtual void Awake()
     {
         _pointWidgetPooler = new ObjectPooler<PointWidget>(_pointWidgetPrefab, parent: transform);
         _stickWidgetPooler = new ObjectPooler<StickWidget>(_stickWidgetPrefab, parent: transform);
+
         _constraintRepsSlider.value = _constraintReps;
         _constraintRepsSlider.onValueChanged.AddListener((value) => _constraintReps = (int)value);
+
+        _solveButton.OnPressChanged += HandleSolveButtonPressChanged;
     }
 
     private void OnDestroy()
     {
         _constraintRepsSlider.onValueChanged.RemoveAllListeners();
+        _solveButton.OnPressChanged -= HandleSolveButtonPressChanged;
     }
 
     private void HandleMaxSizeReached()
@@ -87,10 +103,17 @@ public abstract class VerletSolver : MonoBehaviour
         throw new NotImplementedException("Max Size Reached");
     }
 
+    private void HandleSolveButtonPressChanged(bool value)
+    {
+        _solveButtonPressed = value;
+    }
+
     protected virtual void Update()
     {
-        if (Input.GetKey(KeyCode.Space) || Input.GetKeyDown(KeyCode.LeftShift))
+        if (_solveButtonPressed && _points.Count > 0)
+        {
             Solve();
+        }
     }
 
     protected virtual void Solve()

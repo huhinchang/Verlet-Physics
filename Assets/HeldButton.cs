@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Assertions;
+using System;
 
 public class HeldButton : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
+    public Action<bool> OnPressChanged;
+
     private const string _kPointerEnter = "PointerEnter";
     private const string _kPointerDown = "PointerDown";
     private const string _kPointerUp = "PointerUp";
@@ -34,22 +37,33 @@ public class HeldButton : MonoBehaviour, IPointerEnterHandler, IPointerDownHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (_graphic != null)
-            _graphic.enabled = true;
-        StartCoroutine(SetTriggerInstant(_kPointerDownHash));
+        UpdatePressed(true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (_graphic != null)
-            _graphic.enabled = false;
-        StartCoroutine(SetTriggerInstant(_kPointerUpHash));
+        UpdatePressed(false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("HERE");
-        StartCoroutine(SetTriggerInstant(_kPointerExitHash));
+        UpdatePressed(false);
+    }
+
+    private void UpdatePressed(bool pressed)
+    {
+        OnPressChanged?.Invoke(pressed);
+        if (_graphic != null)
+        {
+            _graphic.enabled = pressed;
+        }
+        if (pressed)
+        {
+            StartCoroutine(SetTriggerInstant(_kPointerDownHash));
+        } else
+        {
+            StartCoroutine(SetTriggerInstant(_kPointerUpHash));
+        }
     }
 
     IEnumerator SetTriggerInstant(int hash)
