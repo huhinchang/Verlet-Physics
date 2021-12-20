@@ -9,40 +9,29 @@ public class TabController : MonoBehaviour
     [System.Serializable]
     class Tab
     {
-        public Button Button;
+        public Toggle Toggle;
         public GameObject GameObject;
+
+        public void HandleTabChange(bool isOn)
+        {
+            GameObject.SetActive(isOn);
+        }
     }
-    [SerializeField]
-    bool _collapsable = default;
 
     [SerializeField]
     private Tab[] _tabs = default;
 
-    private Tab _activeTab;
-
     void Start()
     {
-        Array.ForEach(_tabs, tab => tab.Button.onClick.AddListener(() => HandleTabChange(tab)));
-        Array.ForEach(_tabs, tab => tab.GameObject.SetActive(false));
-        HandleTabChange(_tabs[0]);
+        foreach (var tab in _tabs)
+        {
+            tab.Toggle.onValueChanged.AddListener(tab.HandleTabChange);
+            tab.GameObject.SetActive(tab.Toggle.isOn);
+        }
     }
 
     private void OnDisable()
     {
-        Array.ForEach(_tabs, tab => tab.Button.onClick.RemoveAllListeners());
-    }
-
-    private void HandleTabChange(Tab tab)
-    {
-        if (_activeTab == null || _activeTab != tab)
-        {
-            _activeTab?.GameObject.SetActive(false);
-            tab.GameObject.SetActive(true);
-            _activeTab = tab;
-        } else if (_collapsable)
-        {
-            _activeTab?.GameObject.SetActive(false);
-            _activeTab = null;
-        }
+        Array.ForEach(_tabs, tab => tab.Toggle.onValueChanged.RemoveAllListeners());
     }
 }
