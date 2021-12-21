@@ -35,9 +35,9 @@ public abstract class VerletSolverWrapper : VerletSolver
     protected override void Update()
     {
         base.Update();
-        if (_points.Count > 0)
+        if (_points.Count > 0 && _showNearestIndicator)
         {
-            _nearestIndicator.gameObject.SetActive(_showNearestIndicator);
+            _nearestIndicator.gameObject.SetActive(true);
             _nearestIndicator.UpdateState(Utils.Generic.GetMousePosition(),
                 _points[GetPointClosestToMouse(_points, point => point.Position).Item3].Position);
         } else
@@ -49,8 +49,6 @@ public abstract class VerletSolverWrapper : VerletSolver
     // Creates a point at the mouse position
     public void CreatePointAtMouse(bool locked)
     {
-        if (!isActiveAndEnabled) return;
-
         if (CreatePoint(Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.GetMouseButton(1)))
         {
             int newPointIndex = _points.Count - 1;
@@ -73,7 +71,6 @@ public abstract class VerletSolverWrapper : VerletSolver
     // sets the point closest to the mouse as selected
     public void SelectClosest()
     {
-        if (!isActiveAndEnabled) return;
         if (_points.Count < 1) return;
 
         SelectPoint(GetPointClosestToMouse(_points, point => point.Position).Item3);
@@ -82,7 +79,6 @@ public abstract class VerletSolverWrapper : VerletSolver
     // sets the lock status of the point closest to the mouse
     public void LockClosest(bool locked)
     {
-        if (!isActiveAndEnabled) return;
         if (_points.Count < 1) return;
 
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);
@@ -93,7 +89,6 @@ public abstract class VerletSolverWrapper : VerletSolver
     // Links the point closest to the mouse with the selected point
     public void LinkClosestToSelected()
     {
-        if (!isActiveAndEnabled) return;
         if (_points.Count < 1) return;
 
         var closestPoint = GetPointClosestToMouse(_points, point => point.Position);

@@ -9,19 +9,23 @@ public class PointWidget : MonoBehaviour
     private const float _kUnlockedScale = 0.1f;
     
     [SerializeField]
-    SpriteRenderer _spriteRenderer = default;
+    SpriteRenderer[] _spriteRenderers = default;
     [SerializeField]
     GameObject _selectedIndicator = default;
 
     private void OnValidate()
     {
-        Assert.IsNotNull(_spriteRenderer);
+        Assert.IsNotNull(_spriteRenderers);
         Assert.IsNotNull(_selectedIndicator);
     }
 
     public void Initialize(Color color, int layer)
     {
-        _spriteRenderer.color = color;
+        foreach (var renderer in _spriteRenderers)
+        {
+            renderer.color = color;
+        }
+        
         gameObject.layer = layer;
         _selectedIndicator.layer = layer;
     }

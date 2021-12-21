@@ -118,11 +118,8 @@ public abstract class VerletSolver : MonoBehaviour
 
     protected virtual void Solve()
     {
-        if (enabled)
-        {
-            UpdatePointWidgets();
-            UpdateStickWidgets();
-        }
+        UpdatePointWidgets();
+        UpdateStickWidgets();
     }
 
     protected void UpdatePointWidgets()
@@ -217,8 +214,6 @@ public abstract class VerletSolver : MonoBehaviour
     // sets the start and end points of the knife
     public void SetKnife(Vector2 start, Vector2 end)
     {
-        if (!enabled) return;
-
         _knifeStart = start;
         _knifeEnd = end;
         UpdateStickWidgets();
@@ -227,15 +222,12 @@ public abstract class VerletSolver : MonoBehaviour
     // sets the start and end points of the knife
     public void SetKnifeActive(bool active)
     {
-        if (!enabled) return;
         _knifeActive = active;
     }
 
     // Removes sticks that intersect the slice
     public void Cut()
     {
-        if (!enabled) return;
-
         for (int i = _sticks.Count - 1; i >= 0; i--)
         {
             Stick s = _sticks[i];
