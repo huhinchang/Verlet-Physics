@@ -12,7 +12,7 @@ uint PointsLength;
 float DeltaTime;
 float2 Gravity;
 
-[numthreads(1,1,1)]
+[numthreads(64,1,1)]
 void ApplyGravity (uint3 id : SV_DispatchThreadID)
 {
 	Point p = Points[id.x];

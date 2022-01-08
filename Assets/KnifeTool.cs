@@ -24,6 +24,7 @@ public class KnifeTool : Tool
             if (Input.GetMouseButtonDown(0))
             {
                 _start = Utils.Generic.GetMousePosition();
+                Debug.Log(_start);
                 _knifeIndicator.UpdateState(_start, _end);
                 _knifeIndicator.gameObject.SetActive(true);
 

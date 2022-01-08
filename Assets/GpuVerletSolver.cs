@@ -23,7 +23,9 @@ public class GpuVerletSolver : VerletSolverWrapper
         pointsBuffer.SetData(_points);
         _gravityShader.SetBuffer(gravityKernel, "Points", pointsBuffer);
 
-        _gravityShader.Dispatch(gravityKernel, _points.Count, 1, 1);
+        // https://stackoverflow.com/questions/4846493/how-to-always-round-up-to-the-next-integer/4846496
+        int threadGroupsX = (_points.Count + 63) / 64;
+        _gravityShader.Dispatch(gravityKernel, threadGroupsX, 1, 1);
 
         // ######################## constraints ############################
         var constraintsKernel = _constraintShader.FindKernel("Constraints");
@@ -37,7 +39,7 @@ public class GpuVerletSolver : VerletSolverWrapper
 
         for (int i = 0; i < _constraintReps; i++)
         {
-            _constraintShader.Dispatch(constraintsKernel, _points.Count, 1, 1);
+            _constraintShader.Dispatch(constraintsKernel, threadGroupsX, 1, 1);
         }
 
         {
