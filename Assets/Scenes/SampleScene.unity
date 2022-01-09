@@ -1703,6 +1703,7 @@ MonoBehaviour:
   - {fileID: 1138644601}
   - {fileID: 519420031}
   - {fileID: 1791424673}
+  - {fileID: 997384732}
   _camBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 20, y: 20, z: 0}
