@@ -2618,6 +2618,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2379769064265478740, guid: bc0ac0955648837408e6bb20f10e5e05, type: 3}
+      propertyPath: m_MaxValue
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2379769064265478741, guid: bc0ac0955648837408e6bb20f10e5e05, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
