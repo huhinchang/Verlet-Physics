@@ -1,5 +1,5 @@
 # About The Project
-![alt text](Recordings/Rope.gif)
+![simulation of rope being cut](Recordings/Rope.gif)
 
 Verlet integration physics simulation implemented on the CPU and GPU
 - CPU (cyan): C#
